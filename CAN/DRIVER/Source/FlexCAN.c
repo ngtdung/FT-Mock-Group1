@@ -15,7 +15,8 @@
    -- Variables
    ---------------------------------------------------------------------------- */
 
-FlexCAN_CallbackType DRV_FlexCAN_Callback[FLEXCAN_INSTANCE_COUNT*2U];
+FlexCAN_CallbackType DRV_FlexCAN_Callback[FLEXCAN_INSTANCE_COUNT*NUMBER_OF_HANDLER_TYPE];
+FlexCAN_CallbackType DRV_FlexCAN_MbCallback[32U];
 
 /**
  * Base addresses for FLEXCAN modules.
@@ -35,6 +36,9 @@ static void FlexCAN_SetBitRate(FLEXCAN_Type *FlexCANx, uint32_t Clocks, uint32_t
 static void FLexCAN_FreezeModeControl(FLEXCAN_Type *FlexCANx, uint8_t EnOrDis);
 static void FlexCAN_SoftReset(FLEXCAN_Type *FlexCANx);
 
+/* ----------------------------------------------------------------------------
+   -- Global functions
+   ---------------------------------------------------------------------------- */
 void FlexCAN_Init(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_ConfigType *FlexCAN_Config)
 {
 	FLEXCAN_Type *FlexCANx = FlexCAN_Base_Addr[FlexCAN_Ins];
@@ -76,6 +80,12 @@ void FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins)
 
 	/* Disable the FlexCAN module */
 	FlexCAN_ModuleControl(FlexCANx, DISABLE);
+}
+
+void Driver_FlexCAN_CallbackRegister(FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID)
+{
+	/* Saving handler function to the corresponding callback pointer */
+	DRV_FlexCAN_Callback[CallbackID] = CallbackFunc;
 }
 
 /* ----------------------------------------------------------------------------
@@ -249,7 +259,6 @@ static void FlexCAN_SoftReset(FLEXCAN_Type *FlexCANx)
 }
 
 /* Handlers for FlexCAN interrupts */
-
 void CAN0_ORed_IRQHandler()
 {
 	/* CAN0 OR'ed [Bus Off OR Transmit Warning OR Receive Warning] */
@@ -261,24 +270,60 @@ void CAN0_Error_IRQHandler()
 	DRV_FlexCAN_Callback[1]();
 }
 
+void CAN0_ORed_0_15_MB_IRQHandler()
+{
+	/* CAN0 OR'ed Message buffer (0-15)*/
+	DRV_FlexCAN_Callback[2]();
+}
+
+void CAN0_ORed_16_31_MB_IRQHandler()
+{
+	/* CAN0 OR'ed Message buffer (16-31)*/
+	DRV_FlexCAN_Callback[3]();
+}
+
 void CAN1_Red_IRQHandler()
 {
 	/* CAN1 OR'ed [Bus Off OR Transmit Warning OR Receive Warning] */
-	DRV_FlexCAN_Callback[2]();
+	DRV_FlexCAN_Callback[4]();
 }
 void CAN1_Error_IRQHandler()
 {
 	/* CAN1 Interrupt indicating that errors were detected on the CAN bus */
-	DRV_FlexCAN_Callback[3]();
+	DRV_FlexCAN_Callback[5]();
+}
+
+void CAN1_ORed_0_15_MB_IRQHandler()
+{
+	/* CAN1 OR'ed Message buffer (0-15)*/
+	DRV_FlexCAN_Callback[6]();
+}
+
+void CAN1_ORed_16_31_MB_IRQHandler()
+{
+	/* CAN1 OR'ed Message buffer (16-31)*/
+	DRV_FlexCAN_Callback[7]();
 }
 
 void CAN2_ORed_IRQHandler()
 {
 	/* CAN2 OR'ed [Bus Off OR Transmit Warning OR Receive Warning] */
-	DRV_FlexCAN_Callback[4]();
+	DRV_FlexCAN_Callback[8]();
 }
 void CAN2_Error_IRQHandler()
 {
 	/* CAN2 Interrupt indicating that errors were detected on the CAN bus */
-	DRV_FlexCAN_Callback[5]();
+	DRV_FlexCAN_Callback[9]();
+}
+
+void CAN2_ORed_0_15_MB_IRQHandler()
+{
+	/* CAN2 OR'ed Message buffer (0-15)*/
+	DRV_FlexCAN_Callback[10]();
+}
+
+void CAN2_ORed_16_31_MB_IRQHandler()
+{
+	/* CAN2 OR'ed Message buffer (16-31)*/
+	DRV_FlexCAN_Callback[11]();
 }
