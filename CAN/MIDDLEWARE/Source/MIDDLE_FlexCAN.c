@@ -5,13 +5,15 @@
  *      Author: adm
  */
 
-#include "FlexCAN.h"
+#include "MIDDLE_FLexCAN.h"
 #include "CLOCK.h"
 #include "PORT.h"
 
 /* ----------------------------------------------------------------------------
    -- Definitions
    ---------------------------------------------------------------------------- */
+#define NUMBER_OF_HANDLER_TYPE		4U
+
 /**
  * Array of PORT for instances FLEXCAN modules. Indexed by FLEXCAN instance number.
  */
@@ -57,7 +59,7 @@ static uint8_t FlexCAN_MUX[FLEXCAN_INSTANCE_COUNT] = FLEXCAN_MUX_Index;
 static FlexCAN_MbType *FlexCAN_MB[FLEXCAN_INSTANCE_COUNT]  = FLEXCAN_MB_BASE_PTR;
 
 /**
- * Array to map LPUART instances to their corresponding NVIC IRQ numbers.
+ * Array to map FLEXCAN instances to their corresponding NVIC IRQ numbers.
  *
  * This array holds the NVIC IRQ numbers corresponding to each LPUART instance.
  * @note This array is indexed by LPUART instance numbers.
@@ -74,7 +76,7 @@ static void FlexCAN_NVIC_Control(FlexCAN_Instance_e Ins, FlexCAN_InterruptType I
 /* ----------------------------------------------------------------------------
    -- Global functions
    ---------------------------------------------------------------------------- */
-void MIDDLE_FlexCAN_Init(FlexCAN_Instance_e Ins)
+void Middle_FlexCAN_Init(FlexCAN_Instance_e Ins)
 {
 	FlexCAN_ConfigType FlexCANConfig;
 
@@ -100,7 +102,7 @@ void MIDDLE_FlexCAN_Init(FlexCAN_Instance_e Ins)
 	FlexCAN_Init(Ins, &FlexCANConfig);
 }
 
-void MIDDLE_FlexCAN_DeInit(FlexCAN_Instance_e Ins)
+void Middle_FlexCAN_DeInit(FlexCAN_Instance_e Ins)
 {
 
 	/* Deinit FlexCAN Driver */
@@ -113,9 +115,13 @@ void MIDDLE_FlexCAN_DeInit(FlexCAN_Instance_e Ins)
 	PCC_PeriClockControl(FlexCAN_PORT[Ins], DISABLE);
 }
 
-void MIDDLE_FlexCAN_SetCallback(FlexCAN_Instance_e Ins, FlexCAN_CallbackType CallbackFunction)
+void Middle_FlexCAN_SetCallback(FlexCAN_Instance_e Ins, Middle_FlexCAN_Handler_e HandlerType, FlexCAN_CallbackType HandlerFunc)
 {
-	DRV_FlexCAN_Callback[Ins*2U] = CallbackFunction;
+	uint8_t CallbackID = 0U;
+
+	CallbackID = (Ins*NUMBER_OF_HANDLER_TYPE) + HandlerType;
+
+	Driver_FlexCAN_CallbackRegister(HandlerFunc, CallbackID);
 }
 
 /* ----------------------------------------------------------------------------
