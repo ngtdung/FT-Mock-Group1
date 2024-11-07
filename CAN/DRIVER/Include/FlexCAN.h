@@ -9,11 +9,53 @@
 #define FLEXCAN_H_
 
 #include "S32K144.h"
+#include "NVIC.h"
+#include <stdbool.h>
 
 /* ----------------------------------------------------------------------------
    -- Definitions
    ---------------------------------------------------------------------------- */
 #define NUMBER_OF_HANDLER_TYPE		4U
+
+#define FLEXCAN_RAMn_DATA_WORD_0_EDL_MASK			(0x80000000U)
+#define FLEXCAN_RAMn_DATA_WORD_0_EDL_SHIFT			(31U)
+#define FLEXCAN_RAMn_DATA_WORD_0_EDL(x)     		(((uint32_t)(((uint32_t)(x)) << FLEXCAN_RAMn_DATA_WORD_0_EDL_SHIFT)) & FLEXCAN_RAMn_DATA_WORD_0_EDL_MASK)
+
+#define FLEXCAN_RAMn_DATA_WORD_0_BRS_MASK			(0x40000000U)
+#define FLEXCAN_RAMn_DATA_WORD_0_BRS_SHIFT			(30U)
+#define FLEXCAN_RAMn_DATA_WORD_0_BRS(x)     		(((uint32_t)(((uint32_t)(x)) << FLEXCAN_RAMn_DATA_WORD_0_BRS_SHIFT)) & FLEXCAN_RAMn_DATA_WORD_0_BRS_MASK)
+
+#define FLEXCAN_RAMn_DATA_WORD_0_ESI_MASK			(0x20000000U)
+#define FLEXCAN_RAMn_DATA_WORD_0_ESI_SHIFT			(29U)
+#define FLEXCAN_RAMn_DATA_WORD_0_ESI(x)     		(((uint32_t)(((uint32_t)(x)) << FLEXCAN_RAMn_DATA_WORD_0_ESI_SHIFT)) & FLEXCAN_RAMn_DATA_WORD_0_ESI_MASK)
+
+#define FLEXCAN_RAMn_DATA_WORD_0_CODE_MASK			(0xF000000U)
+#define FLEXCAN_RAMn_DATA_WORD_0_CODE_SHIFT			(24U)
+#define FLEXCAN_RAMn_DATA_WORD_0_CODE(x)    		(((uint32_t)(((uint32_t)(x)) << FLEXCAN_RAMn_DATA_WORD_0_CODE_SHIFT)) & FLEXCAN_RAMn_DATA_WORD_0_CODE_MASK)
+
+#define FLEXCAN_RAMn_DATA_WORD_0_SRR_MASK   		(0x400000U)
+#define FLEXCAN_RAMn_DATA_WORD_0_SRR_SHIFT  		(22U)
+#define FLEXCAN_RAMn_DATA_WORD_0_SRR(x)     		(((uint32_t)(((uint32_t)(x)) << FLEXCAN_RAMn_DATA_WORD_0_SRR_SHIFT)) & FLEXCAN_RAMn_DATA_WORD_0_SRR_MASK)
+
+#define FLEXCAN_RAMn_DATA_WORD_0_IDE_MASK   		(0x200000U)
+#define FLEXCAN_RAMn_DATA_WORD_0_IDE_SHIFT  		(21U)
+#define FLEXCAN_RAMn_DATA_WORD_0_IDE(x)     		(((uint32_t)(((uint32_t)(x)) << FLEXCAN_RAMn_DATA_WORD_0_IDE_SHIFT)) & FLEXCAN_RAMn_DATA_WORD_0_IDE_MASK)
+
+#define FLEXCAN_RAMn_DATA_WORD_0_RTR_MASK   		(0x100000U)
+#define FLEXCAN_RAMn_DATA_WORD_0_RTR_SHIFT  		(20U)
+#define FLEXCAN_RAMn_DATA_WORD_0_RTR(x)     		(((uint32_t)(((uint32_t)(x)) << FLEXCAN_RAMn_DATA_WORD_0_RTR_SHIFT)) & FLEXCAN_RAMn_DATA_WORD_0_RTR_MASK)
+
+#define FLEXCAN_RAMn_DATA_WORD_0_DLC_MASK   		(0xF0000U)
+#define FLEXCAN_RAMn_DATA_WORD_0_DLC_SHIFT  		(16U)
+#define FLEXCAN_RAMn_DATA_WORD_0_DLC(x)     		(((uint32_t)(((uint32_t)(x)) << FLEXCAN_RAMn_DATA_WORD_0_DLC_SHIFT)) & FLEXCAN_RAMn_DATA_WORD_0_DLC_MASK)
+
+#define FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_MASK   	(0x7FFFU)
+#define FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_SHIFT  	(0U)
+#define FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP(x)     	(((uint32_t)(((uint32_t)(x)) << FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_SHIFT)) & FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_MASK)
+
+#define FLEXCAN_RAMn_DATA_WORD_1_ID_MASK    		(0x1FFC0000U)
+#define FLEXCAN_RAMn_DATA_WORD_1_ID_SHIFT   		(18U)
+#define FLEXCAN_RAMn_DATA_WORD_1_ID(x)      		(((uint32_t)(((uint32_t)(x)) << FLEXCAN_RAMn_DATA_WORD_1_ID_SHIFT)) & FLEXCAN_RAMn_DATA_WORD_1_ID_MASK)
 
 typedef void (*FlexCAN_CallbackType)(void);
 
@@ -159,9 +201,12 @@ typedef struct
 	FlexCAN_ClkSrc_e		CLkSrc;
 	FlexCAN_PinType			PortPin;
 	FlexCAN_InterruptType	IntControl;
-	FlexCAN_CallbackType	Callback;
-	void					*CallbackParam;
 }FlexCAN_ConfigType;
+
+typedef enum{
+	FlexCAN_STANDARD = 0U,
+	FlexCAN_EXT = 1U
+}FlexCAN_MsgIDType_e;
 
 typedef struct
 {
@@ -169,11 +214,11 @@ typedef struct
 	uint8_t 			BRS;
 	uint8_t 			ESI;
 	FlexCAN_MbType_e	MbType;
-	uint8_t 			SRR;
-	uint8_t 			IDE;
-	uint8_t				RTR;
-	uint8_t				DLC;
+	FlexCAN_MsgIDType_e IdType;
+	bool				IsRemote;
+	uint8_t				DataLen;
 	uint16_t 			MbID;
+	bool				IsEnableMbInt;
 }FlexCAN_MbHeaderType;
 
 typedef struct
@@ -194,6 +239,8 @@ typedef struct
 void FlexCAN_MbInit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, FlexCAN_MbHeaderType *FLexCAN_MbConfig);
 void FlexCAN_Init(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_ConfigType *FlexCAN_Config);
 void FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins);
+void FlexCAN_Transmit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, uint8_t * MsgData);
+void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, uint8_t * MsgData);
 void Driver_FlexCAN_CallbackRegister(FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID);
 
 #endif /* FLEXCAN_H_ */

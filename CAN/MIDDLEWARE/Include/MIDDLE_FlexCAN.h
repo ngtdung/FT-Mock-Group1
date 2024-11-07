@@ -22,5 +22,4 @@ void Middle_FlexCAN_Init(FlexCAN_Instance_e Ins);
 void Middle_FlexCAN_DeInit(FlexCAN_Instance_e Ins);
 void Middle_FlexCAN_SetCallback(FlexCAN_Instance_e Ins, Middle_FlexCAN_Handler_e HandlerType, FlexCAN_CallbackType HandlerFunc);
 
-
 #endif /* INCLUDE_MIDDLE_FLEXCAN_H_ */

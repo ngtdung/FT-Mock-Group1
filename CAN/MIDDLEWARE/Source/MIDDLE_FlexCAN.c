@@ -86,7 +86,7 @@ void Middle_FlexCAN_Init(FlexCAN_Instance_e Ins)
 	FlexCANConfig.IntControl.IntError = FlexCAN_INT_ERROR_ENABLE;
 	FlexCANConfig.PortPin.TxPin = FlexCAN0_Tx;
 	FlexCANConfig.PortPin.RxPin = FlexCAN0_Rx;
-	FlexCANConfig.RunMode = FlexCAN_MODE_NORMAL;
+	FlexCANConfig.RunMode = FlexCAN_MODE_LOOPBACK;
 	FlexCANConfig.ClkFreq = FLEXCAN_GET_FREQ(FlexCANConfig.CLkSrc);
 
 	/* PORT initialization */
