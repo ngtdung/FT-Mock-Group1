@@ -180,41 +180,43 @@ static void FlexCAN_IntControl(FLEXCAN_Type *FlexCANx, FlexCAN_InterruptType Int
 
 static void FlexCAN_SetBitRate(FLEXCAN_Type *FlexCANx, uint32_t Clocks, uint32_t BitRate)
 {
-    uint32_t prescaler = 0;
-    uint32_t prop_seg = 0;
-    uint32_t tseg = 0;
-    uint32_t actual_baud = 0;
-    uint32_t best_prescaler = 0, best_prop_seg = 0, best_tseg = 0;
-    uint32_t min_error = UINT32_MAX;
+    uint32_t PRESCALER = 0;
+    uint32_t PROP_SEG = 0;
+    uint32_t P_SEG = 0;
+    uint32_t ACTUAL_BAUD = 0;
+    uint32_t BEST_PRESCALER = 0, BEST_PROP_SEG = 0, BEST_P_SEG = 0;
+    uint32_t MIN_ERROR = UINT32_MAX;
+	uint32_t ERROR = 0;
+	uint32_t BITRATE_SET = 0;
 
     // Duyá»‡t qua cÃ¡c giÃ¡ trá»‹ há»£p lÃ½ cho PROP_SEG vÃ  TSEG
-    for (prop_seg = 1; prop_seg <= 7; prop_seg++)
+    for (PROP_SEG = 1; PROP_SEG <= 7; PROP_SEG++)
     {
-        for (tseg = 2; tseg <= 8; tseg++)
+        for (P_SEG = 2; P_SEG <= 8; P_SEG++)
         {
             // TÃ­nh toÃ¡n prescaler cho cÃ¡c giÃ¡ trá»‹ Ä‘ang xÃ©t
-            prescaler = (Clocks / (BitRate * (1 + prop_seg + 2 * tseg))) - 1;
+            PRESCALER = (Clocks / (BitRate * (1 + PROP_SEG + 2 * P_SEG))) - 1;
 
             // Kiá»ƒm tra prescaler trong giá»›i háº¡n
-            if (prescaler > 255 && prescaler < 0)
+            if (PRESCALER > 255 && PRESCALER < 0)
                 continue;
-            if ((1 + prop_seg + 2 * tseg) > 11 && (1 + prop_seg + 2 * tseg) < 21)
+            if ((1 + PROP_SEG + 2 * P_SEG) > 11 && (1 + PROP_SEG + 2 * P_SEG) < 21)
                 continue;
-            if (((tseg * 100) / (1 + prop_seg + 2 * tseg) > 24) && ((tseg * 100) / (1 + prop_seg + 2 * tseg) < 20))
+            if (((P_SEG * 100) / (1 + PROP_SEG + 2 * P_SEG) > 24) && ((P_SEG * 100) / (1 + PROP_SEG + 2 * P_SEG) < 20))
 
                 // TÃ­nh toÃ¡n baud rate thá»±c táº¿
-                actual_baud = Clocks / ((prescaler + 1) * (1 + prop_seg + 2 * tseg));
+                ACTUAL_BAUD = Clocks / ((PRESCALER + 1) * (1 + PROP_SEG + 2 * P_SEG));
 
             // TÃ­nh sai sá»‘ giá»¯a baud rate mong muá»‘n vÃ  thá»±c táº¿
-            uint32_t error = (actual_baud > BitRate) ? (actual_baud - BitRate) : (BitRate - actual_baud);
+            ERROR = (ACTUAL_BAUD > BitRate) ? (ACTUAL_BAUD - BitRate) : (BitRate - ACTUAL_BAUD);
 
             // LÆ°u giÃ¡ trá»‹ tá»‘t nháº¥t khi sai sá»‘ nhá»� nháº¥t
-            if (error < min_error)
+            if (ERROR < MIN_ERROR)
             {
-                min_error = error;
-                best_prescaler = prescaler;
-                best_prop_seg = prop_seg;
-                best_tseg = tseg;
+                MIN_ERROR = ERROR;
+                BEST_PRESCALER = PRESCALER;
+                BEST_PROP_SEG = PROP_SEG;
+                BEST_P_SEG = P_SEG;
             }
             else
             {
@@ -222,8 +224,9 @@ static void FlexCAN_SetBitRate(FLEXCAN_Type *FlexCANx, uint32_t Clocks, uint32_t
             }
         }
     }
-
-    FlexCANx->CTRL1 |= (best_prescaler << FLEXCAN_CTRL1_PRESDIV_SHIFT) | (best_prop_seg << FLEXCAN_CTRL1_PROPSEG_SHIFT) | (best_tseg << FLEXCAN_CTRL1_PSEG1_SHIFT) | (best_tseg << FLEXCAN_CTRL1_PSEG2_SHIFT);
+	BITRATE_SET = (BEST_PRESCALER << FLEXCAN_CTRL1_PRESDIV_SHIFT) | (BEST_PROP_SEG << FLEXCAN_CTRL1_PROPSEG_SHIFT) | (BEST_P_SEG << FLEXCAN_CTRL1_PSEG1_SHIFT) | (BEST_P_SEG << FLEXCAN_CTRL1_PSEG2_SHIFT);
+	/* Sets best parameters for FlexCAN module */
+    FlexCANx->CTRL1 |= BITRATE_SET;
 }
 
 static void FLexCAN_FreezeModeControl(FLEXCAN_Type *FlexCANx, uint8_t EnOrDis)
