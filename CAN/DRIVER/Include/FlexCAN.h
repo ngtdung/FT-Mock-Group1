@@ -13,9 +13,9 @@
 /* ----------------------------------------------------------------------------
    -- Definitions
    ---------------------------------------------------------------------------- */
-typedef void (*FlexCAN_CallbackType)(void);
+#define NUMBER_OF_HANDLER_TYPE		4U
 
-extern FlexCAN_CallbackType DRV_FlexCAN_Callback[FLEXCAN_INSTANCE_COUNT*2U];
+typedef void (*FlexCAN_CallbackType)(void);
 
 /* Structures and enums for CAN configuration */
 typedef enum
@@ -159,6 +159,8 @@ typedef struct
 	FlexCAN_ClkSrc_e		CLkSrc;
 	FlexCAN_PinType			PortPin;
 	FlexCAN_InterruptType	IntControl;
+	FlexCAN_CallbackType	Callback;
+	void					*CallbackParam;
 }FlexCAN_ConfigType;
 
 typedef struct
@@ -192,5 +194,6 @@ typedef struct
 void FlexCAN_MbInit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, FlexCAN_MbHeaderType *FLexCAN_MbConfig);
 void FlexCAN_Init(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_ConfigType *FlexCAN_Config);
 void FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins);
+void Driver_FlexCAN_CallbackRegister(FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID);
 
 #endif /* FLEXCAN_H_ */
