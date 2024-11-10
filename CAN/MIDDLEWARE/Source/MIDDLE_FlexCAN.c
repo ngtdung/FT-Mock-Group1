@@ -12,8 +12,6 @@
 /* ----------------------------------------------------------------------------
    -- Definitions
    ---------------------------------------------------------------------------- */
-#define NUMBER_OF_HANDLER_TYPE		4U
-
 /**
  * Array of PORT for instances FLEXCAN modules. Indexed by FLEXCAN instance number.
  */
@@ -61,8 +59,8 @@ static FlexCAN_MbType *FlexCAN_MB[FLEXCAN_INSTANCE_COUNT]  = FLEXCAN_MB_BASE_PTR
 /**
  * Array to map FLEXCAN instances to their corresponding NVIC IRQ numbers.
  *
- * This array holds the NVIC IRQ numbers corresponding to each LPUART instance.
- * @note This array is indexed by LPUART instance numbers.
+ * This array holds the NVIC IRQ numbers corresponding to each FLEXCAN instance.
+ * @note This array is indexed by FLEXCAN instance numbers.
  */
 static IRQn_Type NVIC_FLEXCAN[NVIC_FLEXCAN_COUNT]	= NVIC_FLEXCAN_Index;
 
@@ -119,9 +117,9 @@ void Middle_FlexCAN_SetCallback(FlexCAN_Instance_e Ins, Middle_FlexCAN_Handler_e
 {
 	uint8_t CallbackID = 0U;
 
-	CallbackID = (Ins*NUMBER_OF_HANDLER_TYPE) + HandlerType;
+	CallbackID = HandlerType;
 
-	Driver_FlexCAN_CallbackRegister(HandlerFunc, CallbackID);
+	Driver_FlexCAN_CallbackRegister(Ins, HandlerFunc, CallbackID);
 }
 
 /* ----------------------------------------------------------------------------
