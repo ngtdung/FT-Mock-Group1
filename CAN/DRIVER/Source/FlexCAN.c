@@ -10,13 +10,21 @@
 /* ----------------------------------------------------------------------------
    -- Definitions
    ---------------------------------------------------------------------------- */
+#define NUMBER_OF_ERROR_ORED_HANDLER_TYPE	(FLEXCAN_INSTANCE_COUNT*2U)
+#define ERROR_HANDLER_GAP			(2U)
+#define ORED_HANDLER_GAP			(1U)
+#define ERROR_INT                               (0x300002U)    /*!< Masks for ErrorOvr, ErrorFast, Error */
+#define BUS_OFF_INT                             (0xB0004U)     /*!< Masks for busOff, Tx/Rx Warning */
+#define NUMBER_OF_MB				(32U)
+#define ERROR_CALLBACK_ID			(32U)
+#define NULL 					((void *)0)
 
 /* ----------------------------------------------------------------------------
    -- Variables
    ---------------------------------------------------------------------------- */
 
-FlexCAN_CallbackType DRV_FlexCAN_Callback[FLEXCAN_INSTANCE_COUNT*NUMBER_OF_HANDLER_TYPE];
-FlexCAN_CallbackType DRV_FlexCAN_MbCallback[32U];
+FlexCAN_CallbackType FlexCAN_Callback[NUMBER_OF_ERROR_ORED_HANDLER_TYPE] = { NULL };
+FlexCAN_CallbackType FlexCAN_MbCallback[NUMBER_OF_MB] = { NULL };
 
 /**
  * Base addresses for FLEXCAN modules.
@@ -46,6 +54,34 @@ static void FlexCAN_MBSetDataLength(FlexCAN_MbStructureType * Mbx, uint16_t Data
 static void FlexCAN_MBSetID(FlexCAN_MbStructureType * Mbx, uint16_t ID);
 static void FlexCAN_MbSetType(FlexCAN_MbStructureType * Mbx, FlexCAN_MbType_e MbType);
 static void FlexCAN_MbSetInterrupt(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, bool IsEnableMbInt);
+
+/* ----------------------------------------------------------------------------
+   -- Private functions for interrupt handler
+   ---------------------------------------------------------------------------- */
+static void FlexCAN_Error_IRQHandler(FlexCAN_Instance_e Ins);
+static void FlexCAN_BusOff_IRQHandler(FlexCAN_Instance_e Ins);
+static void FlexCAN_MB_IRQHandler(FlexCAN_Instance_e Ins);
+
+/* ----------------------------------------------------------------------------
+   -- Handlers for FlexCAN interrupts
+   ---------------------------------------------------------------------------- */
+/* FlexCAN 0 interrupt handlers */
+void CAN0_ORed_IRQHandler(void);
+void CAN0_Error_IRQHandler(void);
+void CAN0_ORed_0_15_MB_IRQHandler(void);
+void CAN0_ORed_16_31_MB_IRQHandler(void);
+
+/* FlexCAN 1 interrupt handlers */
+void CAN1_Red_IRQHandler(void);
+void CAN1_Error_IRQHandler(void);
+void CAN1_ORed_0_15_MB_IRQHandler(void);
+void CAN1_ORed_16_31_MB_IRQHandler(void);
+
+/* FlexCAN 2 interrupt handlers */
+void CAN2_ORed_IRQHandler(void);
+void CAN2_Error_IRQHandler(void);
+void CAN2_ORed_0_15_MB_IRQHandler(void);
+void CAN2_ORed_16_31_MB_IRQHandler(void);
 
 /* ----------------------------------------------------------------------------
    -- Global functions
@@ -93,10 +129,26 @@ void FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins)
 	FlexCAN_ModuleControl(FlexCANx, DISABLE);
 }
 
-void Driver_FlexCAN_CallbackRegister(FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID)
+void Driver_FlexCAN_CallbackRegister(FlexCAN_Instance_e Ins, FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID)
 {
+	uint8_t CallbackIndex = CallbackID;
+
 	/* Saving handler function to the corresponding callback pointer */
-	DRV_FlexCAN_Callback[CallbackID] = CallbackFunc;
+	if(CallbackIndex < NUMBER_OF_MB)
+	{
+		FlexCAN_MbCallback[CallbackID] = CallbackFunc;
+	}
+	else
+	{
+		if(CallbackID == ERROR_CALLBACK_ID)
+		{
+			FlexCAN_Callback[Ins*ERROR_HANDLER_GAP] = CallbackFunc;
+		}
+		else
+		{
+			FlexCAN_Callback[Ins*ERROR_HANDLER_GAP + ORED_HANDLER_GAP] = CallbackFunc;
+		}
+	}
 }
 
 void FlexCAN_MbInit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex,
@@ -406,72 +458,177 @@ static void FlexCAN_MbSetInterrupt(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbInd
 	}
 }
 
-/* Handlers for FlexCAN interrupts */
+/* ----------------------------------------------------------------------------
+   -- Private functions for interrupt handler
+   ---------------------------------------------------------------------------- */
+static void FlexCAN_Error_IRQHandler(FlexCAN_Instance_e Ins)
+{
+	FLEXCAN_Type *FlexCANx = FlexCAN_Base_Addr[Ins];
+
+	/* Invoke callback */
+	if(FlexCAN_Callback[Ins*ERROR_HANDLER_GAP] != NULL)
+	{
+		FlexCAN_Callback[Ins*ERROR_HANDLER_GAP];
+	}
+	else
+	{
+		/* Callback is not registered */
+	}
+
+    /* Clear all other error interrupts in ESR1 register */
+    FlexCANx->ESR1 |= ERROR_INT;
+}
+
+static void FlexCAN_BusOff_IRQHandler(FlexCAN_Instance_e Ins)
+{
+	FLEXCAN_Type *FlexCANx = FlexCAN_Base_Addr[Ins];
+
+	/* Invoke callback */
+	if(FlexCAN_Callback[Ins*ERROR_HANDLER_GAP + ORED_HANDLER_GAP] != NULL)
+	{
+		FlexCAN_Callback[Ins*ERROR_HANDLER_GAP + ORED_HANDLER_GAP];
+	}
+	else
+	{
+		/* Callback is not registered */
+	}
+
+    /* Clear all BusOff and Tx/Rx Warning interrupts in ESR1 register */
+    FlexCANx->ESR1 |= BUS_OFF_INT;
+}
+
+static void FlexCAN_MB_IRQHandler(FlexCAN_Instance_e Ins)
+{
+	FLEXCAN_Type *FlexCANx = FlexCAN_Base_Addr[Ins];
+
+	/* Variable for raised MB interrupt flag */
+	uint8_t RaisedFlag = 0;
+
+	/* Variable for MBx's index */
+    uint8_t MbIndex = 0;
+
+    /* Get the interrupts that are enabled and ready */
+    while((RaisedFlag & SET) == 0U && (MbIndex < NUMBER_OF_MB))
+    {
+    	/* Check if IFLAG is set with the corresponding IMASK bit */
+		RaisedFlag = (((FlexCANx->IFLAG1 & (FlexCANx->IMASK1 & FLEXCAN_IMASK1_BUF31TO0M_MASK)) >> MbIndex) & SET);
+
+		/* Forward to check next MB interrupt */
+		MbIndex++;
+    }
+
+    if(RaisedFlag == SET)
+    {
+    	/* Invoke callback */
+    	if(FlexCAN_MbCallback[MbIndex] != NULL)
+    	{
+    		FlexCAN_MbCallback[MbIndex];
+    	}
+    	else
+    	{
+    		/* Callback is not registered */
+    	}
+
+    	/* Clear the corresponding IFLAG */
+    	FlexCANx->IFLAG1 |= (SET << MbIndex);
+    }
+    else
+    {
+    	/* No interrupt occurs */
+    }
+}
+
+/* ----------------------------------------------------------------------------
+   -- Handlers for FlexCAN interrupts
+   ---------------------------------------------------------------------------- */
+/*
+ * FlexCAN 0 Interrupt Handlers
+ * - These handlers manage interrupts for FlexCAN module 0.
+ * - Each interrupt is handled by a specific function in the FlexCAN driver,
+ *   with FlexCAN0_Ins passed to specify the CAN instance.
+ */
 void CAN0_ORed_IRQHandler()
 {
-	/* CAN0 OR'ed [Bus Off OR Transmit Warning OR Receive Warning] */
-	DRV_FlexCAN_Callback[0]();
+    /* Handles bus-off condition for FlexCAN0, triggered when the CAN bus is off, TX warning or RX warning. */
+    FlexCAN_BusOff_IRQHandler(FlexCAN0_Ins);
 }
+
 void CAN0_Error_IRQHandler()
 {
-	/* CAN0 Interrupt indicating that errors were detected on the CAN bus */
-	DRV_FlexCAN_Callback[1]();
+    /* Handles error conditions for FlexCAN0, triggered on error frames or bit errors. */
+    FlexCAN_Error_IRQHandler(FlexCAN0_Ins);
 }
 
 void CAN0_ORed_0_15_MB_IRQHandler()
 {
-	/* CAN0 OR'ed Message buffer (0-15)*/
-	DRV_FlexCAN_Callback[2]();
+    /* Handles message buffer interrupts for FlexCAN0, message buffers 0-15. */
+    FlexCAN_MB_IRQHandler(FlexCAN0_Ins);
 }
 
 void CAN0_ORed_16_31_MB_IRQHandler()
 {
-	/* CAN0 OR'ed Message buffer (16-31)*/
-	DRV_FlexCAN_Callback[3]();
+    /* Handles message buffer interrupts for FlexCAN0, message buffers 16-31. */
+    FlexCAN_MB_IRQHandler(FlexCAN0_Ins);
 }
 
-void CAN1_Red_IRQHandler()
+/*
+ * FlexCAN 1 Interrupt Handlers
+ * - These handlers manage interrupts for FlexCAN module 1.
+ * - FlexCAN1_Ins is passed to specify the CAN instance for FlexCAN1-specific processing.
+ */
+void CAN1_ORed_IRQHandler()
 {
-	/* CAN1 OR'ed [Bus Off OR Transmit Warning OR Receive Warning] */
-	DRV_FlexCAN_Callback[4]();
+    /* Handles bus-off, TX warning or RX warning condition for FlexCAN1. */
+    FlexCAN_BusOff_IRQHandler(FlexCAN1_Ins);
 }
+
 void CAN1_Error_IRQHandler()
 {
-	/* CAN1 Interrupt indicating that errors were detected on the CAN bus */
-	DRV_FlexCAN_Callback[5]();
+    /* Handles error conditions for FlexCAN1. */
+    FlexCAN_Error_IRQHandler(FlexCAN1_Ins);
 }
 
 void CAN1_ORed_0_15_MB_IRQHandler()
 {
-	/* CAN1 OR'ed Message buffer (0-15)*/
-	DRV_FlexCAN_Callback[6]();
+    /* Handles message buffer interrupts for FlexCAN1, message buffers 0-15. */
+    FlexCAN_MB_IRQHandler(FlexCAN1_Ins);
 }
 
 void CAN1_ORed_16_31_MB_IRQHandler()
 {
-	/* CAN1 OR'ed Message buffer (16-31)*/
-	DRV_FlexCAN_Callback[7]();
+    /* Handles message buffer interrupts for FlexCAN1, message buffers 16-31. */
+    FlexCAN_MB_IRQHandler(FlexCAN1_Ins);
 }
 
+/*
+ * FlexCAN 2 Interrupt Handlers
+ * - These handlers manage interrupts for FlexCAN module 2.
+ * - FlexCAN2_Ins is used to specify FlexCAN2-specific processing in each handler.
+ */
 void CAN2_ORed_IRQHandler()
 {
-	/* CAN2 OR'ed [Bus Off OR Transmit Warning OR Receive Warning] */
-	DRV_FlexCAN_Callback[8]();
+    /* Handles bus-off, TX warning or RX warning condition for FlexCAN2. */
+    FlexCAN_BusOff_IRQHandler(FlexCAN2_Ins);
 }
+
 void CAN2_Error_IRQHandler()
 {
-	/* CAN2 Interrupt indicating that errors were detected on the CAN bus */
-	DRV_FlexCAN_Callback[9]();
+    /* Handles error conditions for FlexCAN2. */
+    FlexCAN_Error_IRQHandler(FlexCAN2_Ins);
 }
 
 void CAN2_ORed_0_15_MB_IRQHandler()
 {
-	/* CAN2 OR'ed Message buffer (0-15)*/
-	DRV_FlexCAN_Callback[10]();
+    /* Handles message buffer interrupts for FlexCAN2, message buffers 0-15. */
+    FlexCAN_MB_IRQHandler(FlexCAN2_Ins);
 }
 
 void CAN2_ORed_16_31_MB_IRQHandler()
 {
-	/* CAN2 OR'ed Message buffer (16-31)*/
-	DRV_FlexCAN_Callback[11]();
+    /* Handles message buffer interrupts for FlexCAN2, message buffers 16-31. */
+    FlexCAN_MB_IRQHandler(FlexCAN2_Ins);
 }
+
+/* ----------------------------------------------------------------------------
+   -- End of file
+   ---------------------------------------------------------------------------- */
