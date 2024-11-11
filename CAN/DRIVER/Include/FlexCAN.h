@@ -241,6 +241,6 @@ void FlexCAN_Init(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_ConfigType *FlexCAN_Co
 void FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins);
 void FlexCAN_Transmit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, uint8_t * MsgData);
 void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, uint8_t * MsgData);
-void Driver_FlexCAN_CallbackRegister(FlexCAN_Instance_e Ins, FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID);
+void FlexCAN_CallbackRegister(FlexCAN_Instance_e Ins, FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID);
 
 #endif /* FLEXCAN_H_ */
