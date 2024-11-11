@@ -129,7 +129,7 @@ void FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins)
 	FlexCAN_ModuleControl(FlexCANx, DISABLE);
 }
 
-void Driver_FlexCAN_CallbackRegister(FlexCAN_Instance_e Ins, FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID)
+void FlexCAN_CallbackRegister(FlexCAN_Instance_e Ins, FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID)
 {
 	uint8_t CallbackIndex = CallbackID;
 
