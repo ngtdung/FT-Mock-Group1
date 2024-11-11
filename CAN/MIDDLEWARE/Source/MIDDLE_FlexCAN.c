@@ -119,7 +119,7 @@ void Middle_FlexCAN_SetCallback(FlexCAN_Instance_e Ins, Middle_FlexCAN_Handler_e
 
 	CallbackID = HandlerType;
 
-	Driver_FlexCAN_CallbackRegister(Ins, HandlerFunc, CallbackID);
+	FlexCAN_CallbackRegister(Ins, HandlerFunc, CallbackID);
 }
 
 /* ----------------------------------------------------------------------------

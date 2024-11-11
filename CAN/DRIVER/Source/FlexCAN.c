@@ -6,6 +6,7 @@
  */
 
 #include "FlexCAN.h"
+#include <stddef.h>
 
 /* ----------------------------------------------------------------------------
    -- Definitions
@@ -17,7 +18,6 @@
 #define BUS_OFF_INT                             (0xB0004U)     /*!< Masks for busOff, Tx/Rx Warning */
 #define NUMBER_OF_MB				(32U)
 #define ERROR_CALLBACK_ID			(32U)
-#define NULL 					((void *)0)
 
 /* ----------------------------------------------------------------------------
    -- Variables
@@ -468,7 +468,7 @@ static void FlexCAN_Error_IRQHandler(FlexCAN_Instance_e Ins)
 	/* Invoke callback */
 	if(FlexCAN_Callback[Ins*ERROR_HANDLER_GAP] != NULL)
 	{
-		FlexCAN_Callback[Ins*ERROR_HANDLER_GAP];
+		FlexCAN_Callback[Ins*ERROR_HANDLER_GAP]();
 	}
 	else
 	{
@@ -486,7 +486,7 @@ static void FlexCAN_BusOff_IRQHandler(FlexCAN_Instance_e Ins)
 	/* Invoke callback */
 	if(FlexCAN_Callback[Ins*ERROR_HANDLER_GAP + ORED_HANDLER_GAP] != NULL)
 	{
-		FlexCAN_Callback[Ins*ERROR_HANDLER_GAP + ORED_HANDLER_GAP];
+		FlexCAN_Callback[Ins*ERROR_HANDLER_GAP + ORED_HANDLER_GAP]();
 	}
 	else
 	{
@@ -517,12 +517,14 @@ static void FlexCAN_MB_IRQHandler(FlexCAN_Instance_e Ins)
 		MbIndex++;
     }
 
+    MbIndex--;
+
     if(RaisedFlag == SET)
     {
     	/* Invoke callback */
     	if(FlexCAN_MbCallback[MbIndex] != NULL)
     	{
-    		FlexCAN_MbCallback[MbIndex];
+    		FlexCAN_MbCallback[MbIndex]();
     	}
     	else
     	{

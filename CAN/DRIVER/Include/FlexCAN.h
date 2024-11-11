@@ -11,6 +11,7 @@
 #include "S32K144.h"
 #include "NVIC.h"
 #include <stdbool.h>
+#include <stddef.h>
 
 /* ----------------------------------------------------------------------------
    -- Definitions
