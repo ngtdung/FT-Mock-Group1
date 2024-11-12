@@ -1,7 +1,7 @@
 -c
--I"G:/APS_Trainning/Mock_Prj_Gr1/FT-Mock-Group1-1/include"
--I"G:/APS_Trainning/Mock_Prj_Gr1/FT-Mock-Group1-1/include"
--I"G:/APS_Trainning/Mock_Prj_Gr1/FT-Mock-Group1-1/src/driver/adc_driver/include"
+-I"E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/include"
+-I"E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/include"
+-I"E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/src/driver/adc_driver/include"
 -x assembler-with-cpp
 -DSTART_FROM_FLASH
 -g3

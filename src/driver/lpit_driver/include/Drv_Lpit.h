@@ -10,16 +10,15 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "Driver_Header.h"
-
+#include "S32K144.h"
+#include "NVIC.h"
 
 /*******************************************************************************
 * Definitions
 *******************************************************************************/
 
-#define NULL	            ((void*)0)
-#define LPIT_MAX_CHANNEL    3U
-#define TRUE                1U
+#define DRV_LPIT_NULL_PTR	    ((void*)0)
+#define DRV_LPIT_MAX_CHANNEL    3U
 
 /* Define function pointer use when callback function */
 typedef void (*Lpit0_Callback_t)(uint8_t);
@@ -125,7 +124,7 @@ typedef enum {
   * @retval LpitStatusType: - SUCCESS    < Initialization successful >
   *                         - FAIL       < Initialization failed >
   */
-LpitStatusType DRV_Lpit_Init(LpitInsType Lpit_ins, const LpitConfigType * UserConfig);
+LpitStatusType DRV_LPIT_Init(LpitInsType Lpit_ins, const LpitConfigType * UserConfig);
 
 /**
   * @brief  This function function allows starting LPIT timer
@@ -135,7 +134,7 @@ LpitStatusType DRV_Lpit_Init(LpitInsType Lpit_ins, const LpitConfigType * UserCo
   * @retval LpitStatusType: - SUCCESS    < Successful action >
   *                         - FAIL       < Failed action >
   */
-LpitStatusType DRV_Lpit_StartTimer(LpitInsType Lpit_ins, LpitChannelType channel, int64_t timer_value);
+LpitStatusType DRV_LPIT_StartTimer(LpitInsType Lpit_ins, LpitChannelType channel, int64_t timer_value);
 
 /**
   * @brief  This function function allows stop LPIT timer
@@ -144,7 +143,7 @@ LpitStatusType DRV_Lpit_StartTimer(LpitInsType Lpit_ins, LpitChannelType channel
   * @retval LpitStatusType: - SUCCESS    < Successful action >
   *                         - FAIL       < Failed action >
   */
-LpitStatusType DRV_Lpit_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel);
+LpitStatusType DRV_LPIT_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel);
 
 /**
   * @brief  This function function allows deinit LPIT peripheral
@@ -153,7 +152,7 @@ LpitStatusType DRV_Lpit_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel)
   * @retval LpitStatusType: - SUCCESS    < Successful action >
   *                         - FAIL       < Failed action >
   */
-LpitStatusType DRV_Lpit_Deinit(LpitInsType Lpit_ins, LpitChannelType channel);
+LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins, LpitChannelType channel);
 
 #endif /* _DRV_LPIT_H_ */
 

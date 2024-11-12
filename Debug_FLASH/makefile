@@ -39,7 +39,7 @@ project_folder_structure.siz \
 all: project_folder_structure.elf secondary-outputs
 
 # Tool invocations
-project_folder_structure.elf: $(OBJS) G:/APS_Trainning/Mock_Prj_Gr1/FT-Mock-Group1-1/Project_Settings/Linker_Files/S32K144_64_flash.ld $(USER_OBJS)
+project_folder_structure.elf: $(OBJS) E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/Project_Settings/Linker_Files/S32K144_64_flash.ld $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Standard S32DS C Linker'
 	arm-none-eabi-gcc -o "project_folder_structure.elf" "@project_folder_structure.args"  $(USER_OBJS) $(LIBS)

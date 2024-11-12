@@ -1,8 +1,8 @@
 /*******************************************************************************
-#include <lpit_driver/include/Drv_Lpit.h>
 * Include
 *******************************************************************************/
-#include <lpit_driver/src/Lpit_hw_access.h>
+#include "Drv_Lpit.h"
+#include "Lpit_hw_access.h"
 
 /*******************************************************************************
 * Variables
@@ -17,11 +17,11 @@ static Lpit0_Callback_t s_callback;
 * Code
 *******************************************************************************/
 
-LpitStatusType Drv_Lpit_Init(LpitInsType Lpit_ins, const LpitConfigType * UserConfig)
+LpitStatusType DRV_LPIT_Init(LpitInsType Lpit_ins, const LpitConfigType * UserConfig)
 {
 	LpitStatusType statusFunc = SUCCESS;
 
-	if ((UserConfig != NULL) && (Lpit_ins == LPIT_INS_0))
+	if ((UserConfig != DRV_LPIT_NULL_PTR) && (Lpit_ins == LPIT_INS_0))
 	{
 		LPIT_Type * lpitBase = LPIT_Base_Addr[Lpit_ins];
 
@@ -47,16 +47,16 @@ LpitStatusType Drv_Lpit_Init(LpitInsType Lpit_ins, const LpitConfigType * UserCo
 			switch (UserConfig->channel)
 			{
 				case LPIT_CHANNEL_0:
-					Hal_Driver_NVIC_SetEnableIRQ(LPIT0_Ch0_IRQn);
+				    NVIC_EnableIRQn(LPIT0_Ch0_IRQn);
 					break;
 				case LPIT_CHANNEL_1:
-					Hal_Driver_NVIC_SetEnableIRQ(LPIT0_Ch1_IRQn);
+				    NVIC_EnableIRQn(LPIT0_Ch1_IRQn);
 					break;
 				case LPIT_CHANNEL_2:
-					Hal_Driver_NVIC_SetEnableIRQ(LPIT0_Ch2_IRQn);
+				    NVIC_EnableIRQn(LPIT0_Ch2_IRQn);
 					break;
 				case LPIT_CHANNEL_3:
-					Hal_Driver_NVIC_SetEnableIRQ(LPIT0_Ch3_IRQn);
+				    NVIC_EnableIRQn(LPIT0_Ch3_IRQn);
 					break;
 				default:
 					break;
@@ -74,7 +74,7 @@ LpitStatusType Drv_Lpit_Init(LpitInsType Lpit_ins, const LpitConfigType * UserCo
 	return statusFunc;
 }
 
-LpitStatusType Drv_Lpit_StartTimer(LpitInsType Lpit_ins, LpitChannelType channel, int64_t timer_value)
+LpitStatusType DRV_LPIT_StartTimer(LpitInsType Lpit_ins, LpitChannelType channel, int64_t timer_value)
 {
 	LpitStatusType statusFunc = SUCCESS;
 
@@ -96,7 +96,7 @@ LpitStatusType Drv_Lpit_StartTimer(LpitInsType Lpit_ins, LpitChannelType channel
     return statusFunc;
 }
 
-LpitStatusType Drv_Lpit_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel)
+LpitStatusType DRV_LPIT_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel)
 {
 	LpitStatusType statusFunc = SUCCESS;
 
@@ -119,9 +119,9 @@ void LPIT0_Ch0_IRQHandler(void)
 {
     uint8_t channel = 0;
     // for check flag channel
-    for (channel = 0; channel <= LPIT_MAX_CHANNEL; channel ++)
+    for (channel = 0; channel <= DRV_LPIT_MAX_CHANNEL; channel ++)
     {
-        if (Lpit_CheckInterruptFlagChannel(channel) == TRUE)
+        if (Lpit_CheckInterruptFlagChannel(channel))
         {
             /* Clear Interrupt Flag */
             Lpit_ClearInterruptFlagChannel(channel);
@@ -131,7 +131,7 @@ void LPIT0_Ch0_IRQHandler(void)
     }
 }
 
-LpitStatusType Drv_Lpit_Deinit(LpitInsType Lpit_ins, LpitChannelType channel)
+LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins, LpitChannelType channel)
 {
 	LpitStatusType statusFunc = SUCCESS;
 
@@ -158,23 +158,23 @@ LpitStatusType Drv_Lpit_Deinit(LpitInsType Lpit_ins, LpitChannelType channel)
 		switch (channel)
 		{
 			case LPIT_CHANNEL_0:
-				Hal_Driver_NVIC_ClearEnableIRQ(LPIT0_Ch0_IRQn);
+			    NVIC_DisableIRQn(LPIT0_Ch0_IRQn);
 				break;
 			case LPIT_CHANNEL_1:
-				Hal_Driver_NVIC_ClearEnableIRQ(LPIT0_Ch1_IRQn);
+			    NVIC_DisableIRQn(LPIT0_Ch1_IRQn);
 				break;
     		case LPIT_CHANNEL_2:
-				Hal_Driver_NVIC_ClearEnableIRQ(LPIT0_Ch2_IRQn);
+    		    NVIC_DisableIRQn(LPIT0_Ch2_IRQn);
 				break;
 			case LPIT_CHANNEL_3:
-				Hal_Driver_NVIC_ClearEnableIRQ(LPIT0_Ch3_IRQn);
+			    NVIC_DisableIRQn(LPIT0_Ch3_IRQn);
 				break;
 			default:
 				break;
 		}
 
 		/* Set call back function when interrupt occur */
-		s_callback = NULL;
+		s_callback = DRV_LPIT_NULL_PTR;
 	}
 
     return statusFunc;
@@ -183,4 +183,3 @@ LpitStatusType Drv_Lpit_Deinit(LpitInsType Lpit_ins, LpitChannelType channel)
 /*******************************************************************************
 * end of file
 *******************************************************************************/
-
