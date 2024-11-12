@@ -26,7 +26,9 @@ src/driver/adc_driver/src \
 src/driver/can_driver/src \
 src/driver/clock_driver/src \
 src/driver/gpio_driver/src \
+src/driver/lpit_driver/src \
 src/driver/port_driver/src \
+src/driver/uart_driver/src \
 src \
 src/middleware/can_middleware/src \
 

@@ -1,7 +1,6 @@
 /*================================================================================================
 ============================================INCLUDE FILES=========================================
 ==================================================================================================*/
-#include "DRV_LIB_HEADER.h"
 #include "DRV_LPUART.h"
 
 /*================================================================================================
@@ -33,7 +32,7 @@ static LPUART_Type *const s_lpuartBase[LPUART_INSTANCE_COUNT] = IP_LPUART_BASE_P
  * @brief This static global array is a const array of uart interrupt handler function equivalent with instances
  *
  */
-static IRQn_Type s_lpuartRxTxIrqId[LPUART_INSTANCE_COUNT] = IP_LPUART_RX_TX_IRQS;
+static IRQn_Type s_lpuartRxTxIrqId[LPUART_INSTANCE_COUNT] = {LPUART0_RxTx_IRQn, LPUART1_RxTx_IRQn, LPUART2_RxTx_IRQn};
 
 
 /**
@@ -349,7 +348,7 @@ DRV_UART_StatusType DRV_UART_Init(const DRV_UART_InstanceType instance, const DR
 		/*Enable interrupt for given LPUART*/
 		if (DRV_UART_usingInterrupts == uartConfig->transferType)
 		{
-			S32_NVIC->ISER[s_lpuartRxTxIrqId[instance] / 32] = 1 << (s_lpuartRxTxIrqId[instance] % 32);
+			NVIC->ISER[s_lpuartRxTxIrqId[instance] / 32] = 1 << (s_lpuartRxTxIrqId[instance] % 32);
 		}
 		s_UARTtxBufferstr[instance].txStatus = DRV_UART_stateReady;
 		s_UARTtxBufferstr[instance].isTxBusy = false;
@@ -974,7 +973,7 @@ DRV_UART_StatusType DRV_UART_Deinit(const DRV_UART_InstanceType instance)
 		s_UARTrxBufferstr[instance].rxStatus = DRV_UART_stateDefault;
 		s_UARTrxBufferstr[instance].isRxBusy = false;
 		/* Disable NVIC module*/
-		S32_NVIC->ICER[s_lpuartRxTxIrqId[instance] / 32] = 1 << (s_lpuartRxTxIrqId[instance] % 32);
+		NVIC->ICER[s_lpuartRxTxIrqId[instance] / 32] = 1 << (s_lpuartRxTxIrqId[instance] % 32);
 		/* Disable transmitter and receiver */
 		base->CTRL &= ~(LPUART_CTRL_TE_MASK | LPUART_CTRL_RE_MASK);
 		while (((base->CTRL & LPUART_CTRL_RE_MASK) >> LPUART_CTRL_RE_SHIFT != 0) && ((base->CTRL & LPUART_CTRL_TE_MASK) >> LPUART_CTRL_TE_SHIFT != 0));

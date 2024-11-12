@@ -9,7 +9,9 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/middleware/can_middleware/src/subdir.mk
+-include src/driver/uart_driver/src/subdir.mk
 -include src/driver/port_driver/src/subdir.mk
+-include src/driver/lpit_driver/src/subdir.mk
 -include src/driver/gpio_driver/src/subdir.mk
 -include src/driver/clock_driver/src/subdir.mk
 -include src/driver/can_driver/src/subdir.mk

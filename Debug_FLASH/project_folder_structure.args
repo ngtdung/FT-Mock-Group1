@@ -14,6 +14,8 @@
 "./src/driver/can_driver/src/FlexCAN.o"
 "./src/driver/clock_driver/src/CLOCK.o"
 "./src/driver/gpio_driver/src/GPIO_Driver.o"
+"./src/driver/lpit_driver/src/Drv_Lpit.o"
 "./src/driver/port_driver/src/PORT_Driver.o"
+"./src/driver/uart_driver/src/DRV_LPUART.o"
 "./src/main.o"
 "./src/middleware/can_middleware/src/MIDDLE_FlexCAN.o"
