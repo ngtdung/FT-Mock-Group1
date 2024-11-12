@@ -8,7 +8,7 @@
 #ifndef INC_NVIC_H_
 #define INC_NVIC_H_
 
-#include "S32K144.h"
+#include "Driver_Header.h"
 
 /* ----------------------------------------------------------------------------
    -- Definitions

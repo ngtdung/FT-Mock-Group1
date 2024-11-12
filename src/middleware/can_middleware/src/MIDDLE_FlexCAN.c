@@ -7,7 +7,7 @@
 
 #include "MIDDLE_FLexCAN.h"
 #include "CLOCK.h"
-#include "PORT.h"
+#include "PORT_Driver.h"
 
 /* ----------------------------------------------------------------------------
    -- Definitions
@@ -15,7 +15,7 @@
 /**
  * Array of PORT for instances FLEXCAN modules. Indexed by FLEXCAN instance number.
  */
-#define FLEXCAN_PORT_INSTANCE { PORTE_Instance, PORTC_Instance, PORTB_Instance }
+#define FLEXCAN_PORT_INSTANCE { PORTE_INSTANCE, PORTC_INSTANCE, PORTB_INSTANCE }
 
 /**
  * PCC (Peripheral Clock Controller) indices for each FLEXCAN instance.
@@ -25,7 +25,7 @@
 /**
  * PCC (Peripheral Clock Controller) indices for each FLEXCAN instance.
  */
-#define FLEXCAN_MUX_Index { ALT5, ALT3, ALT4 }
+#define FLEXCAN_MUX_Index { portMuxAlt5, portMuxAlt3, portMuxAlt4 }
 
 #define FLEXCAN_MB_BASE_PTR { MB_FLEXCAN_0, MB_FLEXCAN_1, MB_FLEXCAN_2 }
 
@@ -162,12 +162,18 @@ void Middle_FlexCAN_StandardTransmitMbInit(FlexCAN_Instance_e Ins,
 
 static void FlexCAN_PORT_Init(FlexCAN_Instance_e Ins, FlexCAN_PinType PortPin)
 {
-	PORT_Config_t	   PORTConfig;
+	PORT_Config_type	   PORTConfig;
+	PORT_PinConfig_type PORTPINConfig;
+
 
 	/* PORT Initialization for FlexCANx */
-	PORTConfig.MUX = FlexCAN_MUX[Ins];
-	PORT_Init(FlexCAN_PORT[Ins], PortPin.TxPin, &PORTConfig);
-	PORT_Init(FlexCAN_PORT[Ins], PortPin.RxPin, &PORTConfig);
+	PORTConfig.muxMode = FlexCAN_MUX[Ins];
+
+	PORTPINConfig.userConfig = PORTConfig;
+	PORTPINConfig.pinCode = FlexCAN_PORT[Ins]*32 + PortPin.TxPin;
+	PORT_Driver_InitPin(&PORTPINConfig);
+	PORTPINConfig.pinCode = FlexCAN_PORT[Ins]*32 + PortPin.RxPin;
+	PORT_Driver_InitPin(&PORTPINConfig);
 }
 
 static void FlexCAN_NVIC_Control(FlexCAN_Instance_e Ins, FlexCAN_InterruptType IntControl)

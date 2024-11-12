@@ -55,6 +55,6 @@ void Middle_FlexCAN_Init(FlexCAN_Instance_e Ins);
 void Middle_FlexCAN_DeInit(FlexCAN_Instance_e Ins);
 void Middle_FlexCAN_SetCallback(FlexCAN_Instance_e Ins, Middle_FlexCAN_Handler_e HandlerType, FlexCAN_CallbackType HandlerFunc);
 void Middle_FlexCAN_StandardTransmitMbInit(FlexCAN_Instance_e Ins, FlexCAN_MbIndex_e MbIndex, uint32_t ID, bool Interrupt);
-void Middle_FlexCAN_StandardReceiveMbInit(FlexCAN_Instance_e Ins, FlexCAN_MbIndex_e MbIndex, uint32_t ID, bool Interrupt)
+void Middle_FlexCAN_StandardReceiveMbInit(FlexCAN_Instance_e Ins, FlexCAN_MbIndex_e MbIndex, uint32_t ID, bool Interrupt);
 
 #endif /* INCLUDE_MIDDLE_FLEXCAN_H_ */

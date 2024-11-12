@@ -8,7 +8,9 @@
 #ifndef INCLUDE_CLOCK_H_
 #define INCLUDE_CLOCK_H_
 
-#include "S32K144.h"
+#define ENABLE 1u
+
+#include "Driver_Header.h"
 
 /* ----------------------------------------------------------------------------
    -- Definitions

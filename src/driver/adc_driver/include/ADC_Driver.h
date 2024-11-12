@@ -19,8 +19,7 @@ extern "C" {
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include <stdint.h>
-#include "S32K144.h"
+#include "Driver_Header.h"
 
 /*==================================================================================================
 *                                             ENUMS

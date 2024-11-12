@@ -105,7 +105,7 @@ static void PDB_ModuleConfig(PDB_Type *PDBTarget, uint8_t PDBIndex)
 {
 /* static void PDB_BusClockEnable(void) */
     /* Enable bus clock in PDB */
-    PCC->PCCn[PDBIndex] |= PCC_PCCn_CGC_MASK;
+    IP_PCC->PCCn[PDBIndex] |= PCC_PCCn_CGC_MASK;
 
 /* static void PDB_PeriodConfig(PDB_SC_Type *pConfig) */
     /* PRESCALER = 6: clk divided by (64 x Mult factor) */
@@ -225,7 +225,7 @@ ADC_Driver_ReturnCode_t ADC_Driver_EnableIRQ(ADC_Type * adcHwUnitId, ADCChannel_
     if(ADC_DRIVER_RETURN_CODE_SUCCESSED == retVal)
     {
         s_currentChannel = channel;
-        S32_NVIC->ISER[(uint32_t)(irqTarget) >> 5U] = (uint32_t)(1UL << ((uint32_t)(irqTarget) & (uint32_t)0x1FU));
+        NVIC->ISER[(uint32_t)(irqTarget) >> 5U] = (uint32_t)(1UL << ((uint32_t)(irqTarget) & (uint32_t)0x1FU));
 #ifndef UNITTEST
         /* all interrupts are allow for activity */
         __asm("cpsie i");

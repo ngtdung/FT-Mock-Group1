@@ -40,7 +40,7 @@ extern "C" {
 *                                      LOCAL VARIABLES
 ==================================================================================================*/
 
-GPIO_Type *g_portBase[PORT_MAX_INSTANCE] = IP_GPIO_BASE_PTRS;
+GPIO_Type *g_gpioPortBase[PORT_MAX_INSTANCE] = IP_GPIO_BASE_PTRS;
 
 /*==================================================================================================
 *                                      GLOBAL CONSTANTS
@@ -66,7 +66,7 @@ void GPIO_Driver_ModeConfig(const GPIO_PinConfig_type *pinConfig)
 {
     uint8_t pin = PORT_EXTRACT_PIN(pinConfig->pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinConfig->pinCode);
-    GPIO_Type *base = g_portBase[port_instance];
+    GPIO_Type *base = g_gpioPortBase[port_instance];
 
     assert(port_instance < PORT_MAX_INSTANCE);
 
@@ -88,7 +88,7 @@ void GPIO_Driver_SetOutput(uint8_t pinCode)
 {
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);
-    GPIO_Type *base = g_portBase[port_instance];
+    GPIO_Type *base = g_gpioPortBase[port_instance];
 
     base->PSOR |= (1UL << pin);
 }
@@ -97,7 +97,7 @@ void GPIO_Driver_ClearOutput(uint8_t pinCode)
 {
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);
-    GPIO_Type *base = g_portBase[port_instance];
+    GPIO_Type *base = g_gpioPortBase[port_instance];
 
     /* PCOR - Port Clear Output Register */
     /* Write 1 to this field, bit in PDOR is cleared to logic 0 */
@@ -108,7 +108,7 @@ void GPIO_Driver_ToggleOutput(uint8_t pinCode)
 {
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);
-    GPIO_Type *base = g_portBase[port_instance];
+    GPIO_Type *base = g_gpioPortBase[port_instance];
 
     /* PTOR - Port Toggle Output Register */
     /* Write 1 to this field to set inverse existing logic state */
@@ -120,7 +120,7 @@ GPIO_Level_type GPIO_Driver_ReadPin(uint8_t pinCode)
     GPIO_Level_type readValue;     /*< read input pin value >*/
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);
-    GPIO_Type *base = g_portBase[port_instance];
+    GPIO_Type *base = g_gpioPortBase[port_instance];
 
     /* check PDIR field */
     /* Port Data Input register */
@@ -141,7 +141,7 @@ void GPIO_Driver_WritePin(uint8_t pinCode, const GPIO_Level_type level)
 {
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);
-    GPIO_Type *base = g_portBase[port_instance];
+    GPIO_Type *base = g_gpioPortBase[port_instance];
 
     /* Port Data Output register */
     /* This register configures the logic levels driven on output pin.*/

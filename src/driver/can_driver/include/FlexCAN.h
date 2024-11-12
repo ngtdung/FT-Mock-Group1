@@ -8,10 +8,7 @@
 #ifndef FLEXCAN_H_
 #define FLEXCAN_H_
 
-#include "S32K144.h"
-#include "NVIC.h"
-#include <stdbool.h>
-#include <stddef.h>
+#include "Driver_Header.h"
 
 /* ----------------------------------------------------------------------------
    -- Definitions

@@ -1,0 +1,9 @@
+-c
+-I"G:/APS_Trainning/Mock_Prj_Gr1/FT-Mock-Group1-1/include"
+-I"G:/APS_Trainning/Mock_Prj_Gr1/FT-Mock-Group1-1/include"
+-I"G:/APS_Trainning/Mock_Prj_Gr1/FT-Mock-Group1-1/src/driver/adc_driver/include"
+-x assembler-with-cpp
+-DSTART_FROM_FLASH
+-g3
+-mcpu=cortex-m4
+-specs=nosys.specs

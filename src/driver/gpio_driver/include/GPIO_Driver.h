@@ -21,9 +21,7 @@ extern "C" {
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
 
-#include <S32K144.h>
-#include "stdbool.h"
-#include "assert.h"
+#include "Driver_Header.h"
 
 /*==================================================================================================
 *                                      DEFINES AND MACROS
