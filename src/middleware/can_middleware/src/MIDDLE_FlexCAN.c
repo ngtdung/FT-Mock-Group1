@@ -122,6 +122,40 @@ void Middle_FlexCAN_SetCallback(FlexCAN_Instance_e Ins, Middle_FlexCAN_Handler_e
 	FlexCAN_CallbackRegister(Ins, HandlerFunc, CallbackID);
 }
 
+void Middle_FlexCAN_StandardReceiveMbInit(FlexCAN_Instance_e Ins,
+		FlexCAN_MbIndex_e MbIndex, uint32_t ID, bool Interrupt)
+{
+	FlexCAN_MbHeaderType MB = {
+			.EDL = 0,
+			.BRS = 0,
+			.ESI = 0,
+			.MbType = FlexCAN_MB_RX,
+			.IdType = FlexCAN_STANDARD,
+			.IsRemote = false,
+			.DataLen = 1,
+			.MbID = ID,
+			.IsEnableMbInt = Interrupt
+	};
+	FlexCAN_MbInit(Ins, MbIndex, &MB);
+}
+
+void Middle_FlexCAN_StandardTransmitMbInit(FlexCAN_Instance_e Ins,
+		FlexCAN_MbIndex_e MbIndex, uint32_t ID, bool Interrupt)
+{
+	FlexCAN_MbHeaderType MB = {
+			.EDL = 0,
+			.BRS = 0,
+			.ESI = 0,
+			.MbType = FlexCAN_MB_TX,
+			.IdType = FlexCAN_STANDARD,
+			.IsRemote = false,
+			.DataLen = 1,
+			.MbID = ID,
+			.IsEnableMbInt = Interrupt
+	};
+	FlexCAN_MbInit(Ins, MbIndex, &MB);
+}
+
 /* ----------------------------------------------------------------------------
    -- Private functions
    ---------------------------------------------------------------------------- */
