@@ -248,6 +248,5 @@ void FlexCAN_Transmit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex,
 void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, uint8_t * MsgData);
 void FlexCAN_CallbackRegister(FlexCAN_Instance_e Ins, FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID);
 FlexCAN_State_e FlexCAN_GetModuleState(FlexCAN_Instance_e Ins);
-void FlexCAN_SetModuleState(FlexCAN_Instance_e Ins, FlexCAN_State_e Transition);
 
 #endif /* FLEXCAN_H_ */
