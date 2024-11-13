@@ -26,6 +26,8 @@
 FlexCAN_CallbackType FlexCAN_Callback[NUMBER_OF_ERROR_ORED_HANDLER_TYPE] = { NULL };
 FlexCAN_CallbackType FlexCAN_MbCallback[NUMBER_OF_MB] = { NULL };
 
+FlexCAN_State_e	FlexCAN_CurrentState[FLEXCAN_INSTANCE_COUNT] = { FLEXCAN_STATE_UNINIT };
+
 /**
  * Base addresses for FLEXCAN modules.
  * @note This array is indexed by LPUART instance numbers.
@@ -54,6 +56,7 @@ static void FlexCAN_MBSetDataLength(FlexCAN_MbStructureType * Mbx, uint16_t Data
 static void FlexCAN_MBSetID(FlexCAN_MbStructureType * Mbx, uint16_t ID);
 static void FlexCAN_MbSetType(FlexCAN_MbStructureType * Mbx, FlexCAN_MbType_e MbType);
 static void FlexCAN_MbSetInterrupt(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, bool IsEnableMbInt);
+static void FlexCAN_SetModuleState(FlexCAN_Instance_e Ins, FlexCAN_State_e Transition);
 
 /* ----------------------------------------------------------------------------
    -- Private functions for interrupt handler
@@ -88,10 +91,10 @@ void CAN2_ORed_16_31_MB_IRQHandler(void);
    ---------------------------------------------------------------------------- */
 void FlexCAN_Init(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_ConfigType *FlexCAN_Config)
 {
-	FLEXCAN_Type *FlexCANx = FlexCAN_Base_Addr[FlexCAN_Ins];
-
-	/* Disable the FlexCAN module */
-	FlexCAN_ModuleControl(FlexCANx, DISABLE);
+   FLEXCAN_Type *FlexCANx = FlexCAN_Base_Addr[FlexCAN_Ins];
+	
+   /* Disable the FlexCAN module */
+   FlexCAN_ModuleControl(FlexCANx, DISABLE);
 
    /* Selects clock source for CAN module */
 	FlexCAN_ClkSrcSelect(FlexCANx, FlexCAN_Config->CLkSrc);
@@ -116,6 +119,9 @@ void FlexCAN_Init(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_ConfigType *FlexCAN_Co
 
    /* Exit Freeze mode */
    FLexCAN_FreezeModeControl(FlexCANx, DISABLE);
+	
+   /* Switch to READY state */
+   FlexCAN_SetModuleState(Ins, FLEXCAN_STATE_READY);
 }
 
 void FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins)
@@ -127,6 +133,9 @@ void FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins)
 
 	/* Disable the FlexCAN module */
 	FlexCAN_ModuleControl(FlexCANx, DISABLE);
+	
+ 	/* Switch to UNINIT state */
+	FlexCAN_SetModuleState(Ins, FLEXCAN_STATE_UNINIT);
 }
 
 void FlexCAN_CallbackRegister(FlexCAN_Instance_e Ins, FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID)
@@ -209,7 +218,8 @@ void FlexCAN_Transmit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex,
 }
 
 void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex,
-		                     uint8_t * MsgData){
+		                     uint8_t * MsgData)
+{
 
 	FlexCAN_MbStructureType * Mbx = &((FlexCAN_MB[FlexCAN_Ins])->MB[MbIndex]);
 	uint8_t DataLen = (((Mbx->Header[0]) & FLEXCAN_RAMn_DATA_WORD_0_DLC_MASK)
@@ -219,14 +229,25 @@ void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e M
 	uint8_t WordSize = 4;
 	uint8_t ByteOffset = 0;
 
-	for(Index = 0; Index < DataLen; Index++){
+	for(Index = 0; Index < DataLen; Index++)
+	{
 		WordIndex = (Index / WordSize);
 		ByteOffset = 3 - (Index % WordSize);
 		MsgData[Index] = ((Mbx->Payload[WordIndex]) >> (8 * ByteOffset));
 	}
+	
 	/* Unlock the Mailbox */
 	(void)((Mbx->Header[0]) & FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_MASK
 			>> FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_SHIFT);
+}
+
+FlexCAN_State_e FlexCAN_GetModuleState(FlexCAN_Instance_e Ins)
+{
+	FlexCAN_State_e RetState = FLEXCAN_STATE_UNINIT;
+
+	RetState = FlexCAN_CurrentState[Ins];
+
+	return RetState;
 }
 
 /* ----------------------------------------------------------------------------
@@ -259,7 +280,7 @@ static void FlexCAN_ClkSrcSelect(FLEXCAN_Type *FlexCANx, FlexCAN_ClkSrc_e CLkSrc
 static void FlexCAN_ClearMB(FLEXCAN_Type *FlexCANx)
 {
 	uint8_t i = 0;
-
+	
 	/* Clears all MBs of FlexCAN module */
    for(i = 0U; i < 128U ;i++)
    {
@@ -437,24 +458,58 @@ static void FlexCAN_MbSetInterrupt(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbInd
 	FLEXCAN_Type * FlexCANx = FlexCAN_Base_Addr[FlexCAN_Ins];
 	IRQn_Type IntIndex = DMA0_IRQn;
 
-	if(FlexCAN_Ins == 0){
-		if(MbIndex <= 15){
+	if(FlexCAN_Ins == 0)
+	{
+		if(MbIndex <= 15)
+		{
 			IntIndex = CAN0_ORed_0_15_MB_IRQn;
-		}else{
+		}
+		else
+		{
 			IntIndex = CAN0_ORed_16_31_MB_IRQn;
 		}
-	}else if(FlexCAN_Ins == 1){
+		
+	}
+	else if(FlexCAN_Ins == 1)
+	{
 		IntIndex = CAN1_ORed_0_15_MB_IRQn;
-	}else{
+	}
+	else
+	{
 		IntIndex = CAN2_ORed_0_15_MB_IRQn;
 	}
 
-	if(IsEnableMbInt){
+	if(IsEnableMbInt)
+	{
 		FlexCANx->IMASK1 |= (1 << MbIndex);
 		NVIC_EnableIRQn(IntIndex);
-	}else{
+	}
+	else
+	{
 		FlexCANx->IMASK1 &= ~(1 << MbIndex);
 		NVIC_DisableIRQn(IntIndex);
+	}
+}
+
+static void FlexCAN_SetModuleState(FlexCAN_Instance_e Ins, FlexCAN_State_e Transition)
+{
+	if(FlexCAN_CurrentState[Ins] != Transition)
+	{
+		/* Switching for desired state */
+		if(Transition == FLEXCAN_STATE_UNINIT)
+		{
+			/* Switching to READY STATE */
+			FlexCAN_CurrentState[Ins] = FLEXCAN_STATE_UNINIT;
+		}
+		else
+		{
+			/* Switching to READY STATE */
+			FlexCAN_CurrentState[Ins] = FLEXCAN_STATE_READY;
+		}
+	}
+	else
+	{
+		/* Current state is already in desired state */
 	}
 }
 
