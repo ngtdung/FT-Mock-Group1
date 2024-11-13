@@ -229,6 +229,8 @@ void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e M
 	uint8_t WordSize = 4;
 	uint8_t ByteOffset = 0;
 
+	FlexCAN_SetModuleState(FLEXCAN_STATE_STARTED);
+	
 	for(Index = 0; Index < DataLen; Index++)
 	{
 		WordIndex = (Index / WordSize);
@@ -239,6 +241,8 @@ void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e M
 	/* Unlock the Mailbox */
 	(void)((Mbx->Header[0]) & FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_MASK
 			>> FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_SHIFT);
+	
+	FlexCAN_SetModuleState(FLEXCAN_STATE_READY);
 }
 
 FlexCAN_State_e FlexCAN_GetModuleState(FlexCAN_Instance_e Ins)
@@ -496,16 +500,7 @@ static void FlexCAN_SetModuleState(FlexCAN_Instance_e Ins, FlexCAN_State_e Trans
 	if(FlexCAN_CurrentState[Ins] != Transition)
 	{
 		/* Switching for desired state */
-		if(Transition == FLEXCAN_STATE_UNINIT)
-		{
-			/* Switching to READY STATE */
-			FlexCAN_CurrentState[Ins] = FLEXCAN_STATE_UNINIT;
-		}
-		else
-		{
-			/* Switching to READY STATE */
-			FlexCAN_CurrentState[Ins] = FLEXCAN_STATE_READY;
-		}
+		FlexCAN_CurrentState[Ins] = Transition;
 	}
 	else
 	{
