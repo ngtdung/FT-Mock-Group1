@@ -11,13 +11,13 @@
  * Includes
  ******************************************************************************/
 #include "S32K144.h"
-#include "NVIC.h"
+#include "Hal_Driver_NVIC.h"
 
 /*******************************************************************************
 * Definitions
 *******************************************************************************/
 
-#define DRV_LPIT_NULL_PTR	    ((void*)0)
+#define DRV_LPIT_NULL_PTR       ((void*)0)
 #define DRV_LPIT_MAX_CHANNEL    3U
 
 /* Define function pointer use when callback function */
@@ -62,24 +62,24 @@ typedef enum
 typedef enum
 {
     LPIT_IRQ_DISABLE    = 0,
-    LPIT_IRQ_CHANNEL_0 	= (1U << 0), /*!< Channel 0 Timer interrupt */
-    LPIT_IRQ_CHANNEL_1 	= (1U << 1), /*!< Channel 1 Timer interrupt */
-    LPIT_IRQ_CHANNEL_2 	= (1U << 2), /*!< Channel 2 Timer interrupt */
-    LPIT_IRQ_CHANNEL_3 	= (1U << 3), /*!< Channel 3 Timer interrupt */
+    LPIT_IRQ_CHANNEL_0  = (1U << 0), /*!< Channel 0 Timer interrupt */
+    LPIT_IRQ_CHANNEL_1  = (1U << 1), /*!< Channel 1 Timer interrupt */
+    LPIT_IRQ_CHANNEL_2  = (1U << 2), /*!< Channel 2 Timer interrupt */
+    LPIT_IRQ_CHANNEL_3  = (1U << 3), /*!< Channel 3 Timer interrupt */
 } LpitInterruptType;
 
 /* Enum stores toggle options for Debug mode */
 typedef enum
 {
     LPIT_DEBUG_MODE_DISABLE = 0U,
-    LPIT_DEBUG_MODE_ENABLE	= 1U
+    LPIT_DEBUG_MODE_ENABLE  = 1U
 } LpitDebugModeType;
 
 /* Enum stores toggle options for Doze mode */
 typedef enum
 {
-    LPIT_DOZE_MODE_DISABLE	= 0U,
-    LPIT_DOZE_MODE_ENABLE	= 1U
+    LPIT_DOZE_MODE_DISABLE  = 0U,
+    LPIT_DOZE_MODE_ENABLE   = 1U
 } LpitDozeModeType;
 
 /* Enum stores options timer stop on interrupt */
@@ -94,10 +94,12 @@ typedef struct
 {
     LpitDebugModeType debug_en;
     LpitDozeModeType doze_en;
-    LpitChannelType channel;
+    LpitChannelType * channel;
+    uint8_t num_of_channel;
     LpitTimerModeType timer_mode;
-    LpitInterruptType interrupt;
+    LpitInterruptType * interrupt;
     LpitTimerStopOnInterrupType timer_stop_on_interrup;
+    uint8_t num_of_interrupt;
     Lpit0_Callback_t callback;
 } LpitConfigType;
 
@@ -107,9 +109,9 @@ typedef enum {
 } LpitInsType;
 
 typedef enum {
-	SUCCESS,
-	FAIL,
-	TIMEOUT
+    SUCCESS,
+    FAIL,
+    TIMEOUT
 } LpitStatusType;
 
 /*******************************************************************************

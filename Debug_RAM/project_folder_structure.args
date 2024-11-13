@@ -1,5 +1,5 @@
 -T
-"E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/Project_Settings/Linker_Files/S32K144_64_flash.ld"
+"E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/Project_Settings/Linker_Files/S32K144_64_ram.ld"
 -Wl,-Map,"project_folder_structure.map"
 -Xlinker
 --gc-sections

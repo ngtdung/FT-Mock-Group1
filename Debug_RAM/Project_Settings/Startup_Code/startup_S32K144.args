@@ -1,0 +1,6 @@
+-c
+-I"E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/include"
+-x assembler-with-cpp
+-g3
+-mcpu=cortex-m4
+-specs=nosys.specs
