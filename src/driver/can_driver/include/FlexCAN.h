@@ -187,7 +187,7 @@ typedef enum
 typedef enum
 {
 	FLEXCAN_STATE_UNINIT		= 0U,
-	FLEXCAN_STATE_STOPPED		= 1U,
+	FLEXCAN_STATE_READY		= 1U,
 	FLEXCAN_STATE_STARTED		= 2U
 } FlexCAN_State_e;
 
