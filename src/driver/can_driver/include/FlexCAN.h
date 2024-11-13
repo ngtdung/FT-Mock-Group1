@@ -184,6 +184,13 @@ typedef enum
     MB31
 } FlexCAN_MbIndex_e;
 
+typedef enum
+{
+	FLEXCAN_STATE_UNINIT		= 0U,
+	FLEXCAN_STATE_STOPPED		= 1U,
+	FLEXCAN_STATE_STARTED		= 2U
+} FlexCAN_State_e;
+
 typedef struct
 {
 	FlexCAN_TxPin_e			TxPin;
@@ -240,5 +247,7 @@ void FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins);
 void FlexCAN_Transmit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, uint8_t * MsgData);
 void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, uint8_t * MsgData);
 void FlexCAN_CallbackRegister(FlexCAN_Instance_e Ins, FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID);
+FlexCAN_State_e FlexCAN_GetModuleState(FlexCAN_Instance_e Ins);
+void FlexCAN_SetModuleState(FlexCAN_Instance_e Ins, FlexCAN_State_e Transition);
 
 #endif /* FLEXCAN_H_ */
