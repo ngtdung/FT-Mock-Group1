@@ -2,7 +2,7 @@
  * FlexCAN.h
  *
  *  Created on: Oct 23, 2024
- *      Author: adm
+ *      Author: Le Hung
  */
 
 #ifndef FLEXCAN_H_
