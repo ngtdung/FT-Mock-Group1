@@ -28,7 +28,6 @@ extern "C" {
 *                                       LOCAL MACROS
 ==================================================================================================*/
 
-#define PORT_NUMBER_OF_PINS             17
 #define PORT_EXTRACT_INSTANCE(value)    (uint8_t)(((value) & 0xE0) >> 5)
 #define PORT_EXTRACT_PIN(value)         (uint8_t)((value) & 0x1F)
 
@@ -62,15 +61,19 @@ GPIO_Type *g_gpioPortBase[PORT_MAX_INSTANCE] = IP_GPIO_BASE_PTRS;
                                        GLOBAL FUNCTIONS
 ==================================================================================================*/
 
-void GPIO_Driver_ModeConfig(const GPIO_PinConfig_type *pinConfig)
+DRV_GPIO_ReturnCode_type DRV_GPIO_PinModeConfig(const GPIO_PinConfig_type *pinConfig)
 {
+    DRV_GPIO_ReturnCode_type retVal = DRV_GPIO_RETURN_CODE_ERROR;
     uint8_t pin = PORT_EXTRACT_PIN(pinConfig->pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinConfig->pinCode);
     GPIO_Type *base = g_gpioPortBase[port_instance];
 
-    assert(port_instance < PORT_MAX_INSTANCE);
+    if((port_instance < PORT_MAX_INSTANCE) && ((void *)0 != pinConfig))
+    {
+        retVal = DRV_GPIO_RETURN_CODE_SUCCESSED;
+    }
 
-    if ((void *)0 != pinConfig)
+    if(DRV_GPIO_RETURN_CODE_SUCCESSED == retVal)
     {
         if (GPIO_PIN_MODE_OUTPUT == pinConfig->pinMode)
         {
@@ -82,9 +85,11 @@ void GPIO_Driver_ModeConfig(const GPIO_PinConfig_type *pinConfig)
             base->PDDR &= ~(1UL << pin);
         }
     }
+
+    return retVal;
 }
 
-void GPIO_Driver_SetOutput(uint8_t pinCode)
+void DRV_GPIO_SetOutput(uint8_t pinCode)
 {
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);
@@ -93,7 +98,7 @@ void GPIO_Driver_SetOutput(uint8_t pinCode)
     base->PSOR |= (1UL << pin);
 }
 
-void GPIO_Driver_ClearOutput(uint8_t pinCode)
+void DRV_GPIO_ClearOutput(uint8_t pinCode)
 {
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);
@@ -104,7 +109,7 @@ void GPIO_Driver_ClearOutput(uint8_t pinCode)
     base->PCOR |= (1UL << pin);
 }
 
-void GPIO_Driver_ToggleOutput(uint8_t pinCode)
+void DRV_GPIO_ToggleOutput(uint8_t pinCode)
 {
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);
@@ -115,7 +120,7 @@ void GPIO_Driver_ToggleOutput(uint8_t pinCode)
     base->PTOR |= (1UL << pin);
 }
 
-GPIO_Level_type GPIO_Driver_ReadPin(uint8_t pinCode)
+GPIO_Level_type DRV_GPIO_ReadPin(uint8_t pinCode)
 {
     GPIO_Level_type readValue;     /*< read input pin value >*/
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
@@ -137,7 +142,7 @@ GPIO_Level_type GPIO_Driver_ReadPin(uint8_t pinCode)
     return readValue;
 }
 
-void GPIO_Driver_WritePin(uint8_t pinCode, const GPIO_Level_type level)
+void DRV_GPIO_WritePin(uint8_t pinCode, const GPIO_Level_type level)
 {
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);

@@ -40,6 +40,15 @@ extern "C" {
 ==================================================================================================*/
 
 /**
+ * @brief Enum type for GPIO functions return type
+ */
+typedef enum DRV_GPIO_ReturnCode_t
+{
+    DRV_GPIO_RETURN_CODE_ERROR     = 0u,
+    DRV_GPIO_RETURN_CODE_SUCCESSED = 1u
+} DRV_GPIO_ReturnCode_type;
+
+/**
  * @brief Enum to define GPIO level definitions
 */
 typedef enum GPIO_Level_t
@@ -71,13 +80,13 @@ typedef struct GPIO_PinConfig_t
                                      FUNCTION PROTOTYPES
 ==================================================================================================*/
 
-void GPIO_Driver_ModeConfig(const GPIO_PinConfig_type *pinConfig);
-void GPIO_Driver_SetOutput(uint8_t pinCode);
+DRV_GPIO_ReturnCode_type DRV_GPIO_PinModeConfig(const GPIO_PinConfig_type *pinConfig);
+void DRV_GPIO_SetOutput(uint8_t pinCode);
 
-void GPIO_Driver_ClearOutput(uint8_t pinCode);
-void GPIO_Driver_ToggleOutput(uint8_t pinCode);
-GPIO_Level_type GPIO_Driver_ReadPin(uint8_t pinCode);
-void GPIO_Driver_WritePin(uint8_t pinCode, const GPIO_Level_type level);
+void DRV_GPIO_ClearOutput(uint8_t pinCode);
+void DRV_GPIO_ToggleOutput(uint8_t pinCode);
+GPIO_Level_type DRV_GPIO_ReadPin(uint8_t pinCode);
+void DRV_GPIO_WritePin(uint8_t pinCode, const GPIO_Level_type level);
 
 
 #ifdef __cplusplus
