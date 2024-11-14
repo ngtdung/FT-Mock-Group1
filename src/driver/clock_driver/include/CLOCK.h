@@ -8,9 +8,7 @@
 #ifndef INCLUDE_CLOCK_H_
 #define INCLUDE_CLOCK_H_
 
-#define ENABLE 1u
-
-#include "Driver_Header.h"
+#include "S32K144.h"
 
 /* ----------------------------------------------------------------------------
    -- Definitions
@@ -84,6 +82,27 @@ typedef enum
 	SCG_SYS_FREQ_VLPRUN		= 4000000U
 }SCG_SysFreqType_e;
 
+typedef enum
+{
+	CLOCK_NOSRC_CLK			= 0U,
+	CLOCK_SOSCDIV2_CLK		= 1U,
+	CLOCK_SIRCDIV2_CLK		= 2U,
+	CLOCK_FIRCDIV2_CLK		= 3U,
+	CLOCK_SPLLDIV2_CLK		= 6U
+}Clock_PeriClockSrc_e;
+
+typedef enum
+{
+	CLOCK_DIV_DISABLED		= 0U,
+	CLOCK_DIV_1					,
+	CLOCK_DIV_2					,
+	CLOCK_DIV_4					,
+	CLOCK_DIV_8					,
+	CLOCK_DIV_16				,
+	CLOCK_DIV_32				,
+	CLOCK_DIV_64
+}Clock_ClkDiv_e;
+
 typedef struct
 {
 	SCG_SCSType_e 		ScsValue;
@@ -92,20 +111,7 @@ typedef struct
 	SCG_DIVSLOWType_e	DivSlowValue;
 }SCG_ModeElementType;
 
-static inline void PCC_PeriClockControl(uint8_t PCCIndex, uint8_t EnOrDis)
-{
-	if(EnOrDis == ENABLE)
-	{
-		/* Enables corresponding peripheral's clock */
-		IP_PCC->PCCn[PCCIndex] |= PCC_PCCn_CGC_MASK;
-	}
-	else
-	{
-		/* Disables corresponding peripheral's clock */
-		IP_PCC->PCCn[PCCIndex] &= ~PCC_PCCn_CGC_MASK;
-	}
-}
-
+void PCC_PeriClockControl(uint8_t PCCIndex, Clock_PeriClockSrc_e ClkSrc, Clock_ClkDiv_e DivVal, uint8_t EnOrDis);
 SCG_SysFreqType_e SCG_GetSysFreq(void);
 
 #endif /* INCLUDE_CLOCK_H_ */
