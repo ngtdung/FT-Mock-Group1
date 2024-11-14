@@ -63,21 +63,25 @@ PORT_Type *g_portBase[PORT_MAX_INSTANCE] = IP_PORT_BASE_PTRS;
 ==================================================================================================*/
 
 
-void PORT_Driver_InitPin(PORT_PinConfig_type *pinConfig)
+DRV_PORT_ReturnCode_type DRV_PORT_InitPin(PORT_PinConfig_type *pinConfig)
 {
+    DRV_PORT_ReturnCode_type retVal = DRV_PORT_RETURN_CODE_ERROR;
     uint8_t pin = PORT_EXTRACT_PIN(pinConfig->pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinConfig->pinCode);
     PORT_Type *base = g_portBase[port_instance];
 
-    assert(pin < PORT_NUMBER_OF_PINS);
-    assert(port_instance < PORT_MAX_INSTANCE);
-    if ((void *)0 != pinConfig)
+    if ((pin < PORT_NUMBER_OF_PINS) && (port_instance < PORT_MAX_INSTANCE) && ((void *)0 != pinConfig))
+    {
+        retVal = DRV_PORT_RETURN_CODE_SUCCESSED;
+    }
+
+    if(DRV_PORT_RETURN_CODE_SUCCESSED == retVal)
     {
         /* Pullup/pulldown configure */
-        if (pinConfig->userConfig.isPullEnable)
+        if (PORT_PULL_ENABLE == pinConfig->userConfig.isPullEnable)
         {
             base->PCR[pin] |= PORT_PCR_PE_MASK;
-            if (portInternalPullDown == pinConfig->userConfig.pullSelect)
+            if (PORT_INTERNAL_PULL_DOWN == pinConfig->userConfig.pullSelect)
             {
                 base->PCR[pin] &= PORT_PCR_PS_MASK;
             }
@@ -87,12 +91,12 @@ void PORT_Driver_InitPin(PORT_PinConfig_type *pinConfig)
             }
         }
         /* Passive filter configure */
-        if (pinConfig->userConfig.isPassiveFilterEnable)
+        if (PORT_PASSIVE_FILTER_ENABLE == pinConfig->userConfig.isPassiveFilterEnable)
         {
             base->PCR[pin] |= PORT_PCR_PFE_MASK;
         }
         /* Driver strength mode */
-        if (portLowDriverStrength == pinConfig->userConfig.driverStrengthMode)
+        if (PORT_DRIVER_STRENGTH_LOW == pinConfig->userConfig.driverStrengthMode)
         {
             base->PCR[pin] &= PORT_PCR_DSE_MASK;
         }
@@ -101,38 +105,60 @@ void PORT_Driver_InitPin(PORT_PinConfig_type *pinConfig)
             base->PCR[pin] |= PORT_PCR_DSE_MASK;
         }
         /* Pin muxing control */
-        if (portMuxDisable != pinConfig->userConfig.muxMode)
+        if (PORT_MUX_ANALOG != pinConfig->userConfig.muxMode)
         {
             base->PCR[pin] &= PORT_PCR_MUX_MASK;
             base->PCR[pin] |= PORT_PCR_MUX((uint8_t)pinConfig->userConfig.muxMode);
         }
         /* Lock register */
-        if(pinConfig->userConfig.isLockRegisterEnable)
+        if (pinConfig->userConfig.isLockRegisterEnable)
         {
             base->PCR[pin] |= PORT_PCR_LK_MASK;
         }
         /* Interrupt configure */
-        if (portIntDisabled != pinConfig->userConfig.interruptMode)
+        if (PORT_INT_DISABLE != pinConfig->userConfig.interruptMode)
         {
             base->PCR[pin] &= PORT_PCR_IRQC_MASK;
             base->PCR[pin] |= PORT_PCR_IRQC((uint8_t)pinConfig->userConfig.interruptMode);
         }
     }
+
+    return retVal;
 }
 
-void PORT_Driver_InitMultiplePin(PORT_PinConfig_type *arrayPinsConfig[], int8_t numberPins)
+DRV_PORT_ReturnCode_type DRV_PORT_InitMultiplePin(PORT_PinConfig_type *arrayPinsConfig[], int8_t numberOfConfigPin)
 {
-    if (((void *)0 != arrayPinsConfig) && (0 != numberPins))
+    DRV_PORT_ReturnCode_type retVal = DRV_PORT_RETURN_CODE_SUCCESSED;
+
+    if ((arrayPinsConfig == NULL) || (numberOfConfigPin <= 0))
     {
-        while(numberPins)
+        retVal = DRV_PORT_RETURN_CODE_ERROR;
+    }
+    else
+    {
+        for (int8_t i = 0; i < numberOfConfigPin; i++)
         {
-            PORT_Driver_InitPin(arrayPinsConfig[numberPins - 1]);
-            numberPins--;
+            /* Check if a Pin configuration is valid or not */
+            if (arrayPinsConfig[i] == NULL)
+            {
+                retVal = DRV_PORT_RETURN_CODE_ERROR;
+                break;
+            }
+
+            /* Check if init a pin success or not */
+            retVal = DRV_PORT_InitPin(arrayPinsConfig[i]);
+
+            if (retVal != DRV_PORT_RETURN_CODE_SUCCESSED)
+            {
+                break;
+            }
         }
     }
+
+    return retVal;
 }
 
-uint8_t PORT_Driver_ReadInterruptFlagPin(uint8_t pinCode)
+uint8_t DRV_PORT_ReadInterruptFlagPin(uint8_t pinCode)
 {
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);
@@ -143,7 +169,7 @@ uint8_t PORT_Driver_ReadInterruptFlagPin(uint8_t pinCode)
     return (uint8_t)((base->PCR[pin] & PORT_PCR_ISF_MASK) >> PORT_PCR_ISF_SHIFT);
 }
 
-void PORT_Driver_ClearInterruptFlagPin(uint8_t pinCode)
+void DRV_PORT_ClearInterruptFlagPin(uint8_t pinCode)
 {
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);
@@ -154,34 +180,43 @@ void PORT_Driver_ClearInterruptFlagPin(uint8_t pinCode)
     base->PCR[pin] |= (1 << PORT_PCR_ISF_SHIFT);
 }
 
-void PORT_Driver_DeinitPin(uint8_t pinCode)
+DRV_PORT_ReturnCode_type DRV_PORT_DeinitPin(uint8_t pinCode)
 {
+    DRV_PORT_ReturnCode_type retVal = DRV_PORT_RETURN_CODE_ERROR;
     uint8_t pin = PORT_EXTRACT_PIN(pinCode);
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinCode);
     PORT_Type *base = g_portBase[port_instance];
 
-    assert(pin < PORT_NUMBER_OF_PINS);
-    assert(port_instance < PORT_MAX_INSTANCE);
-    /* Avoid write into reserved bit */
-    base->PCR[pin] &= PORT_PCR_PS_MASK;
-    base->PCR[pin] &= PORT_PCR_PE_MASK;
-    base->PCR[pin] &= PORT_PCR_PFE_MASK;
-    base->PCR[pin] &= PORT_PCR_DSE_MASK;
-    base->PCR[pin] &= PORT_PCR_MUX_MASK;
-    base->PCR[pin] &= PORT_PCR_LK_MASK;
-    base->PCR[pin] &= PORT_PCR_IRQC_MASK;
-    /* Write 1 to clear */
-    base->PCR[pin] |= PORT_PCR_ISF_MASK;
+    if ((pin < PORT_NUMBER_OF_PINS) && (port_instance < PORT_MAX_INSTANCE))
+    {
+        retVal == DRV_PORT_RETURN_CODE_SUCCESSED;
+    }
+
+    if (DRV_PORT_RETURN_CODE_SUCCESSED == retVal)
+    {
+        /* Avoid write into reserved bit */
+        base->PCR[pin] &= PORT_PCR_PS_MASK;
+        base->PCR[pin] &= PORT_PCR_PE_MASK;
+        base->PCR[pin] &= PORT_PCR_PFE_MASK;
+        base->PCR[pin] &= PORT_PCR_DSE_MASK;
+        base->PCR[pin] &= PORT_PCR_MUX_MASK;
+        base->PCR[pin] &= PORT_PCR_LK_MASK;
+        base->PCR[pin] &= PORT_PCR_IRQC_MASK;
+        /* Write 1 to clear */
+        base->PCR[pin] |= PORT_PCR_ISF_MASK;
+    }
+
+    return retVal;
 }
 
-void PORT_Driver_DeinitMultiplePin(uint8_t *arrayPinCode, uint8_t numberPins)
+void DRV_PORT_DeinitMultiplePin(uint8_t *arrayPinCode, uint8_t numberOfConfigPin)
 {
-    if (((void *)0 != arrayPinCode) && (0 != numberPins))
+    if (((void *)0 != arrayPinCode) && (0 != numberOfConfigPin))
     {
-        while(numberPins)
+        while(numberOfConfigPin)
         {
-            PORT_Driver_DeinitPin(arrayPinCode[numberPins - 1]);
-            numberPins--;
+            DRV_PORT_DeinitPin(arrayPinCode[numberOfConfigPin - 1]);
+            numberOfConfigPin--;
         }
     }
 }
