@@ -10,7 +10,6 @@
 /* ----------------------------------------------------------------------------
    -- Definitions
    ---------------------------------------------------------------------------- */
-
 typedef enum
 {
 	SCG_MODE_NORMAL_RUN					= 0U,
@@ -33,6 +32,48 @@ typedef enum
 	 (RegisterValue == SCG_MODE_VALUE_HIGHSPEED_RUN)  	 ? SCG_SYS_FREQ_HSRUN 		: \
 	 (RegisterValue == SCG_MODE_VALUE_HIGHSPEED80_RUN)   ? SCG_SYS_FREQ_HSRUN80 	: \
 	 (RegisterValue == SCG_MODE_VALUE_VLOWPOWER_RUN)     ? SCG_SYS_FREQ_VLPRUN 		: 0)
+
+/* ----------------------------------------------------------------------------
+   -- Global variables
+   ---------------------------------------------------------------------------- */
+volatile uint32_t *SCG_DivideReg[7] = { NULL, &(IP_SCG->SOSCDIV), &(IP_SCG->SIRCDIV), &(IP_SCG->FIRCDIV), NULL, NULL, &(IP_SCG->SPLLDIV) };
+
+/* ----------------------------------------------------------------------------
+   -- Global Functions
+   ---------------------------------------------------------------------------- */
+void PCC_PeriClockControl(uint8_t PCCIndex, Clock_PeriClockSrc_e ClkSrc, Clock_ClkDiv_e DivVal, uint8_t EnOrDis)
+{
+	volatile uint32_t *SCG_xDivideReg = NULL;
+
+	if(EnOrDis == ENABLE)
+	{
+		/* Enables corresponding clock source for peripheral */
+		if(ClkSrc != CLOCK_NOSRC_CLK)
+		{
+			IP_PCC->PCCn[PCCIndex] &= ~PCC_PCCn_PCS_MASK;
+			IP_PCC->PCCn[PCCIndex] |= PCC_PCCn_PCS(ClkSrc);
+
+			/* Gets the corresponding SCG divide register */
+			SCG_xDivideReg = SCG_DivideReg[ClkSrc];
+
+			/* Enables corresponding peripheral clock source with desired divide value */
+			*SCG_xDivideReg &= ~SCG_FIRCDIV_FIRCDIV2_MASK;
+			*SCG_xDivideReg |= SCG_FIRCDIV_FIRCDIV2(DivVal);
+		}
+		else
+		{
+			/* The peripheral do not use peri clock source */
+		}
+
+		/* Enables corresponding peripheral's clock */
+		IP_PCC->PCCn[PCCIndex] |= PCC_PCCn_CGC_MASK;
+	}
+	else
+	{
+		/* Disables corresponding peripheral's clock */
+		IP_PCC->PCCn[PCCIndex] &= ~PCC_PCCn_CGC_MASK;
+	}
+}
 
 SCG_SysFreqType_e SCG_GetSysFreq(void)
 {
