@@ -43,6 +43,7 @@ static void FlexCAN_ClearMB(FLEXCAN_Type *FlexCANx);
 static void FlexCAN_RunModeSelect(FLEXCAN_Type *FlexCANx, FlexCAN_Mode_e Mode);
 static void FlexCAN_IntControl(FLEXCAN_Type *FlexCANx, FlexCAN_InterruptType IntType);
 static void FlexCAN_SetBitRate(FLEXCAN_Type *FlexCANx, uint32_t Clocks, uint32_t BitRate);
+static void FlexCAN_SetMBnumber(FlexCAN_Type *FlexCANx, uint8_t MaxMB);
 static void FLexCAN_FreezeModeControl(FLEXCAN_Type *FlexCANx, uint8_t EnOrDis);
 static void FlexCAN_SoftReset(FLEXCAN_Type *FlexCANx);
 static void FlexCAN_MBSetEDL(FlexCAN_MbStructureType * Mbx, uint8_t EDLValue);
@@ -90,8 +91,8 @@ void FlexCAN_Init(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_ConfigType *FlexCAN_Co
 {
 	FLEXCAN_Type *FlexCANx = FlexCAN_Base_Addr[FlexCAN_Ins];
 
-	/* Disable the FlexCAN module */
-	FlexCAN_ModuleControl(FlexCANx, DISABLE);
+   /* Disable the FlexCAN module */
+   FlexCAN_ModuleControl(FlexCANx, DISABLE);
 
    /* Selects clock source for CAN module */
 	FlexCAN_ClkSrcSelect(FlexCANx, FlexCAN_Config->CLkSrc);
@@ -113,6 +114,9 @@ void FlexCAN_Init(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_ConfigType *FlexCAN_Co
 
    /* Sets desired bit rate for FLexCAN module */
    FlexCAN_SetBitRate(FlexCANx, FlexCAN_Config->ClkFreq, FlexCAN_Config->BitRate);
+
+   /* Sets the number of MBs that can be used */
+   FlexCAN_MbSetMBnumber(FlexCANx, FlexCAN_Config->MaxNoMB);
 
    /* Exit Freeze mode */
    FLexCAN_FreezeModeControl(FlexCANx, DISABLE);
@@ -356,6 +360,23 @@ static void FlexCAN_SetBitRate(FLEXCAN_Type *FlexCANx, uint32_t Clocks, uint32_t
     FlexCANx->CTRL1 |= (best_prescaler << FLEXCAN_CTRL1_PRESDIV_SHIFT) | (best_prop_seg << FLEXCAN_CTRL1_PROPSEG_SHIFT) | (best_tseg << FLEXCAN_CTRL1_PSEG1_SHIFT) | (best_tseg << FLEXCAN_CTRL1_PSEG2_SHIFT);
 }
 
+static void FlexCAN_SetMBnumber(FlexCAN_Type *FlexCANx, uint8_t MaxMB);
+{
+	uint8_t NoMB = 0U;
+
+	if(MaxMB >= NUMBER_OF_MB)
+	{
+		NoMB = NUMBER_OF_MB - 1U;
+	}
+	else
+	{
+		NoMB = MaxMB;
+	}
+	
+	FlexCANx->MCR &= ~FLEXCAN_MCR_MAXMB_MASK;
+	FlexCANx->MCR |= FLEXCAN_MCR_MAXMB(NoMB);
+}
+
 static void FLexCAN_FreezeModeControl(FLEXCAN_Type *FlexCANx, uint8_t EnOrDis)
 {
 	if(EnOrDis == ENABLE)
@@ -384,7 +405,7 @@ static void FlexCAN_SoftReset(FLEXCAN_Type *FlexCANx)
 	/* Reset memory-mapped registers */
 	FlexCANx->MCR |= FLEXCAN_MCR_SOFTRST_MASK;
 
-	/* Wait for the reset procedure completed */
+	/* Wait for the reset procedure to be completed */
 	while(((FlexCANx->MCR & FLEXCAN_MCR_SOFTRST_MASK) >> FLEXCAN_MCR_SOFTRST_SHIFT) == SET);
 }
 
