@@ -2,7 +2,7 @@
  * FlexCAN.c
  *
  *  Created on: Oct 23, 2024
- *      Author: adm
+ *      Author: Le Hung
  */
 
 #include "FlexCAN.h"
@@ -497,7 +497,7 @@ static void FlexCAN_Error_IRQHandler(FlexCAN_Instance_e Ins)
 	}
 
     /* Clear all other error interrupts in ESR1 register */
-    FlexCANx->ESR1 |= ERROR_INT;
+    FlexCANx->ESR1 = ERROR_INT;
 }
 
 static void FlexCAN_BusOff_IRQHandler(FlexCAN_Instance_e Ins)
@@ -515,7 +515,7 @@ static void FlexCAN_BusOff_IRQHandler(FlexCAN_Instance_e Ins)
 	}
 
     /* Clear all BusOff and Tx/Rx Warning interrupts in ESR1 register */
-    FlexCANx->ESR1 |= BUS_OFF_INT;
+    FlexCANx->ESR1 = BUS_OFF_INT;
 }
 
 static void FlexCAN_MB_IRQHandler(FlexCAN_Instance_e Ins)
@@ -523,13 +523,19 @@ static void FlexCAN_MB_IRQHandler(FlexCAN_Instance_e Ins)
 	FLEXCAN_Type *FlexCANx = FlexCAN_Base_Addr[Ins];
 
 	/* Variable for raised MB interrupt flag */
-	uint8_t RaisedFlag = 0;
+	uint8_t RaisedFlag = 0U;
 
 	/* Variable for MBx's index */
-    uint8_t MbIndex = 0;
+    uint8_t MbIndex = 0U;
 
+	/* Variable for the max number of MBs */
+	uint8_t MaxMbNo = 0U;
+	
+    /* Gets the max number of Mbs */
+    MaxMbNo = (FlexCANx->MCR >> FLEXCAN_MCR_MAXMB_SHIFT) & FLEXCAN_MCR_MAXMB_MASK;
+	
     /* Get the interrupts that are enabled and ready */
-    while((RaisedFlag & SET) == 0U && (MbIndex < NUMBER_OF_MB))
+    while((RaisedFlag & SET) == 0U && (MbIndex <= MaxMbNo))
     {
     	/* Check if IFLAG is set with the corresponding IMASK bit */
 		RaisedFlag = (((FlexCANx->IFLAG1 & (FlexCANx->IMASK1 & FLEXCAN_IMASK1_BUF31TO0M_MASK)) >> MbIndex) & SET);
@@ -553,7 +559,7 @@ static void FlexCAN_MB_IRQHandler(FlexCAN_Instance_e Ins)
     	}
 
     	/* Clear the corresponding IFLAG */
-    	FlexCANx->IFLAG1 |= (SET << MbIndex);
+    	FlexCANx->IFLAG1 = SET << MbIndex;
     }
     else
     {
