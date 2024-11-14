@@ -54,16 +54,16 @@ LpitStatusType DRV_LPIT_Init(LpitInsType Lpit_ins, const LpitConfigType * UserCo
                 switch ((UserConfig->interrupt)[idx])
                 {
                     case LPIT_IRQ_CHANNEL_0:
-                        Hal_Driver_NVIC_SetEnableIRQ(LPIT0_Ch0_IRQn);
+                        NVIC_EnableIRQn(LPIT0_Ch0_IRQn);
                         break;
                     case LPIT_IRQ_CHANNEL_1:
-                        Hal_Driver_NVIC_SetEnableIRQ(LPIT0_Ch1_IRQn);
+                        NVIC_EnableIRQn(LPIT0_Ch1_IRQn);
                         break;
                     case LPIT_IRQ_CHANNEL_2:
-                        Hal_Driver_NVIC_SetEnableIRQ(LPIT0_Ch2_IRQn);
+                        NVIC_EnableIRQn(LPIT0_Ch2_IRQn);
                         break;
                     case LPIT_IRQ_CHANNEL_3:
-                        Hal_Driver_NVIC_SetEnableIRQ(LPIT0_Ch3_IRQn);
+                        NVIC_EnableIRQn(LPIT0_Ch3_IRQn);
                         break;
                     default:
                         break;
@@ -196,16 +196,16 @@ LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins, LpitChannelType channel)
         switch (channel)
         {
             case LPIT_CHANNEL_0:
-                Hal_Driver_NVIC_ClearEnableIRQ(LPIT0_Ch0_IRQn);
+                NVIC_DisableIRQn(LPIT0_Ch0_IRQn);
                 break;
             case LPIT_CHANNEL_1:
-                Hal_Driver_NVIC_ClearEnableIRQ(LPIT0_Ch1_IRQn);
+                NVIC_DisableIRQn(LPIT0_Ch1_IRQn);
                 break;
             case LPIT_CHANNEL_2:
-                Hal_Driver_NVIC_ClearEnableIRQ(LPIT0_Ch2_IRQn);
+                NVIC_DisableIRQn(LPIT0_Ch2_IRQn);
                 break;
             case LPIT_CHANNEL_3:
-                Hal_Driver_NVIC_ClearEnableIRQ(LPIT0_Ch3_IRQn);
+                NVIC_DisableIRQn(LPIT0_Ch3_IRQn);
                 break;
             default:
                 break;
