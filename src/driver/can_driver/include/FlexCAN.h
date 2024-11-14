@@ -193,12 +193,13 @@ typedef struct
 
 typedef struct
 {
-	uint32_t 				BitRate;
-	uint32_t 				ClkFreq;
+	uint8_t 			MaxNoMB;
+	uint32_t 			BitRate;
+	uint32_t 			ClkFreq;
 	FlexCAN_Mode_e			RunMode;
 	FlexCAN_ClkSrc_e		CLkSrc;
 	FlexCAN_PinType			PortPin;
-	FlexCAN_InterruptType	IntControl;
+	FlexCAN_InterruptType		IntControl;
 }FlexCAN_ConfigType;
 
 typedef enum{
