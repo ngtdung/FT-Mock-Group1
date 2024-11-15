@@ -16,9 +16,11 @@
 #include "../src/driver/adc_driver/include/ADC_Driver.h"
 #include "FlexCAN.h"
 #include "../src/driver/clock_driver/include/CLOCK.h"
+#include "../src/driver/clock_driver/include/Drv_Clock.h"
 #include "../src/driver/gpio_driver/include/GPIO_Driver.h"
 #include "../src/driver/NVIC/include/NVIC.h"
 #include "../src/driver/port_driver/include/PORT_Driver.h"
+#include "../src/driver/lpit_driver/include/Drv_Lpit.h"
 //#include "UART"
 //#include "assert.h"
 

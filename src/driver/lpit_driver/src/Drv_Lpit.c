@@ -1,7 +1,7 @@
 /*******************************************************************************
 * Include
 *******************************************************************************/
-#include "Drv_Lpit.h"
+#include "Driver_Header.h"
 #include "Lpit_hw_access.h"
 
 /*******************************************************************************
@@ -33,7 +33,7 @@ LpitStatusType DRV_LPIT_Init(LpitInsType Lpit_ins, const LpitConfigType * UserCo
         Lpit_SetupTimer(lpitBase, UserConfig->debug_en, UserConfig->doze_en);
 
         /************************/
-        for (idx = 0; idx <= UserConfig->num_of_channel; idx++)
+        for (idx = 0U; idx <= UserConfig->num_of_channel; idx++)
         {
             /* Setup the channel counters operation mode to "32-bit Periodic Counter"
              * and keep default values for the trigger source */
@@ -46,31 +46,12 @@ LpitStatusType DRV_LPIT_Init(LpitInsType Lpit_ins, const LpitConfigType * UserCo
         /* Enable channel interrupt */
         if (UserConfig->num_of_interrupt != 0U)
         {
-            for (idx = 0; idx <= UserConfig->num_of_interrupt; idx++)
+            for (idx = 0U; idx <= UserConfig->num_of_interrupt; idx++)
             {
                 Lpit_EnableChannelInterrupt(lpitBase, (UserConfig->interrupt)[idx]);
-
-                /* Enable interrupt on NVIC for LPIT channel */
-                switch ((UserConfig->interrupt)[idx])
-                {
-                    case LPIT_IRQ_CHANNEL_0:
-                        NVIC_EnableIRQn(LPIT0_Ch0_IRQn);
-                        break;
-                    case LPIT_IRQ_CHANNEL_1:
-                        NVIC_EnableIRQn(LPIT0_Ch1_IRQn);
-                        break;
-                    case LPIT_IRQ_CHANNEL_2:
-                        NVIC_EnableIRQn(LPIT0_Ch2_IRQn);
-                        break;
-                    case LPIT_IRQ_CHANNEL_3:
-                        NVIC_EnableIRQn(LPIT0_Ch3_IRQn);
-                        break;
-                    default:
-                        break;
-                }
             }
-                /* Set call back function when interrupt occur */
-                s_callback = UserConfig->callback;
+            /* Set call back function when interrupt occur */
+            s_callback = UserConfig->callback;
         }
     }
     else
@@ -121,7 +102,7 @@ LpitStatusType DRV_LPIT_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel)
     return statusFunc;
 }
 
-/* Interrupt service function for LPIT0 - channle 0 */
+/* Interrupt service routine for LPIT0 - channle 0 */
 void LPIT0_Ch0_IRQHandler(void)
 {
     if (Lpit_CheckInterruptFlagChannel(LPIT_CHANNEL_0))
@@ -133,6 +114,7 @@ void LPIT0_Ch0_IRQHandler(void)
     }
 }
 
+/* Interrupt service routine for LPIT0 - channle 1 */
 void LPIT0_Ch1_IRQHandler(void)
 {
     if (Lpit_CheckInterruptFlagChannel(LPIT_CHANNEL_1))
@@ -145,6 +127,7 @@ void LPIT0_Ch1_IRQHandler(void)
     else {}
 }
 
+/* Interrupt service routine for LPIT0 - channle 2 */
 void LPIT0_Ch2_IRQHandler(void)
 {
     if (Lpit_CheckInterruptFlagChannel(LPIT_CHANNEL_2))
@@ -157,6 +140,7 @@ void LPIT0_Ch2_IRQHandler(void)
     else {}
 }
 
+/* Interrupt service routine for LPIT0 - channle 3 */
 void LPIT0_Ch3_IRQHandler(void)
 {
     if (Lpit_CheckInterruptFlagChannel(LPIT_CHANNEL_3))
@@ -169,11 +153,11 @@ void LPIT0_Ch3_IRQHandler(void)
     else {}
 }
 
-LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins, LpitChannelType channel)
+LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins)
 {
     LpitStatusType statusFunc = SUCCESS;
 
-    if ((Lpit_ins != LPIT_INS_0) || (channel < LPIT_CHANNEL_0) || (channel > LPIT_CHANNEL_3))
+    if (Lpit_ins != LPIT_INS_0)
     {
         statusFunc = FAIL;
     }
@@ -183,33 +167,11 @@ LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins, LpitChannelType channel)
         /* Reset the timer channels and registers */
         Lpit_ResetTimer(lpitBase);
 
-        /* Setup timer operation in debug and doze modes and enable clock for module */
-        Lpit_SetupTimer(lpitBase, LPIT_DEBUG_MODE_DISABLE, LPIT_DOZE_MODE_DISABLE);
-
-        /* Timer stop on timeout */
-        Lpit_SetTimerStopOnInterrupt(lpitBase, channel, LPIT_TSOI_DISABLE);
-
-        /* Disable channel interrupt */
-        Lpit_EnableChannelInterrupt(lpitBase, LPIT_IRQ_DISABLE);
-
         /* Disable interrupt on NVIC for LPIT channel */
-        switch (channel)
-        {
-            case LPIT_CHANNEL_0:
-                NVIC_DisableIRQn(LPIT0_Ch0_IRQn);
-                break;
-            case LPIT_CHANNEL_1:
-                NVIC_DisableIRQn(LPIT0_Ch1_IRQn);
-                break;
-            case LPIT_CHANNEL_2:
-                NVIC_DisableIRQn(LPIT0_Ch2_IRQn);
-                break;
-            case LPIT_CHANNEL_3:
-                NVIC_DisableIRQn(LPIT0_Ch3_IRQn);
-                break;
-            default:
-                break;
-        }
+        NVIC_DisableIRQn(LPIT0_Ch0_IRQn);
+        NVIC_DisableIRQn(LPIT0_Ch1_IRQn);
+        NVIC_DisableIRQn(LPIT0_Ch2_IRQn);
+        NVIC_DisableIRQn(LPIT0_Ch3_IRQn);
 
         /* Set call back function when interrupt occur */
         s_callback = DRV_LPIT_NULL_PTR;

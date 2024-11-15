@@ -5,7 +5,7 @@
  *      Author: adm
  */
 
-#include "MIDDLE_FLexCAN.h"
+#include "../src/middleware/can_middleware/include/MIDDLE_FLexCAN.h"
 #include "CLOCK.h"
 #include "PORT_Driver.h"
 

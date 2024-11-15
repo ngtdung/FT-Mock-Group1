@@ -1,5 +1,6 @@
 -DCPU_S32K144HFT0VLLT
 -I"E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/src/driver/lpit_driver/include"
+-I"E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/src/middleware/lpit_middleware/include"
 -I"E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/include"
 -I"E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/include"
 -I"E:/EMBEDDED_DEV_APS/Mock/Git_work/FT-Mock-Group1/src/driver/adc_driver/include"

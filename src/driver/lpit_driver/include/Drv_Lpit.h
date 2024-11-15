@@ -11,7 +11,6 @@
  * Includes
  ******************************************************************************/
 #include "S32K144.h"
-#include "NVIC.h"
 
 /*******************************************************************************
 * Definitions
@@ -110,8 +109,7 @@ typedef enum {
 
 typedef enum {
     SUCCESS,
-    FAIL,
-    TIMEOUT
+    FAIL
 } LpitStatusType;
 
 /*******************************************************************************
@@ -154,7 +152,7 @@ LpitStatusType DRV_LPIT_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel)
   * @retval LpitStatusType: - SUCCESS    < Successful action >
   *                         - FAIL       < Failed action >
   */
-LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins, LpitChannelType channel);
+LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins);
 
 #endif /* _DRV_LPIT_H_ */
 
