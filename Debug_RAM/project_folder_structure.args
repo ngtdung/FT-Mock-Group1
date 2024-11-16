@@ -19,5 +19,4 @@
 "./src/driver/port_driver/src/PORT_Driver.o"
 "./src/driver/uart_driver/src/DRV_LPUART.o"
 "./src/main.o"
-"./src/middleware/can_middleware/src/MIDDLE_FlexCAN.o"
 "./src/middleware/lpit_middleware/src/Mid_Lpit.o"

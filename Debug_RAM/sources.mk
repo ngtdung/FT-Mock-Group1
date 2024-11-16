@@ -30,6 +30,5 @@ src/driver/lpit_driver/src \
 src/driver/port_driver/src \
 src/driver/uart_driver/src \
 src \
-src/middleware/can_middleware/src \
 src/middleware/lpit_middleware/src \
 

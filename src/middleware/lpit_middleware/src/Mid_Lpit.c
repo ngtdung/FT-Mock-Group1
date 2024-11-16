@@ -79,17 +79,12 @@ void MID_LPIT_Deinit(LpitInsType Lpit_ins)
 	DRV_LPIT_Deinit(Lpit_ins);
 }
 
-void MID_LPIT_InitClock(void)
+static void MID_LPIT_InitClock(void)
 {
-    /* This variable allows the user to configure out function for Bus Clock */
-    const AsynClockConfigType Config_Asyn_Clock = {
-            .clockSource = PCS_FIRCDIV2_CLK,
-            .clockDIV2 = SCG_xDIV2_DIV_16
-    };
-    DRV_CLOCK_ConfigAsynClock(PCC_LPIT_INDEX, &Config_Asyn_Clock);
+    PCC_PeriClockControl(PCC_LPIT_INDEX, CLOCK_FIRCDIV2_CLK, CLOCK_DIV_1, ENABLE);
 }
 
-void MID_LPIT_EnableInterruptChannel(void)
+static void MID_LPIT_EnableInterruptChannel(void)
 {
     uint8_t idx = 0U;
     /* Enable interrupt on NVIC for LPIT channel */
