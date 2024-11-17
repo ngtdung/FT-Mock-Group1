@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icon/external-link.png</file>
+    <file>icon/home.png</file>
+    <file>icon/play-circle.png</file>
+    <file>icon/settings.png</file>
+    <file>icon/stop-circle.png</file>
+    <file>led_icons/blue-led-on.png</file>
+    <file>led_icons/green-led-on.png</file>
+    <file>led_icons/led-off.png</file>
+    <file>led_icons/led-red-on.png</file>
+  </qresource>
+</RCC>
