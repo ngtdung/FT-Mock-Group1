@@ -222,6 +222,7 @@ void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e M
 {
 
 	FlexCAN_MbStructureType * Mbx = &((FlexCAN_MB[FlexCAN_Ins])->MB[MbIndex]);
+	FLEXCAN_Type * FlexCANx = FlexCAN_Base_Addr[FlexCAN_Ins];
 	uint8_t DataLen = (((Mbx->Header[0]) & FLEXCAN_RAMn_DATA_WORD_0_DLC_MASK)
 							>> FLEXCAN_RAMn_DATA_WORD_0_DLC_SHIFT);
 	uint8_t Index = 0;
@@ -239,6 +240,7 @@ void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e M
 	}
 	
 	/* Unlock the Mailbox */
+<<<<<<< Updated upstream
 	(void)((Mbx->Header[0]) & FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_MASK
 			>> FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_SHIFT);
 	
@@ -252,6 +254,9 @@ FlexCAN_State_e FlexCAN_GetModuleState(FlexCAN_Instance_e Ins)
 	RetState = FlexCAN_CurrentState[Ins];
 
 	return RetState;
+=======
+	(void)FlexCANx->TIMER
+>>>>>>> Stashed changes
 }
 
 /* ----------------------------------------------------------------------------
@@ -460,6 +465,7 @@ static void FlexCAN_MbSetType(FlexCAN_MbStructureType * Mbx, FlexCAN_MbType_e Mb
 
 static void FlexCAN_MbSetInterrupt(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, bool IsEnableMbInt){
 	FLEXCAN_Type * FlexCANx = FlexCAN_Base_Addr[FlexCAN_Ins];
+<<<<<<< Updated upstream
 	IRQn_Type IntIndex = DMA0_IRQn;
 
 	if(FlexCAN_Ins == 0)
@@ -482,16 +488,21 @@ static void FlexCAN_MbSetInterrupt(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbInd
 	{
 		IntIndex = CAN2_ORed_0_15_MB_IRQn;
 	}
+=======
+>>>>>>> Stashed changes
 
 	if(IsEnableMbInt)
 	{
 		FlexCANx->IMASK1 |= (1 << MbIndex);
+<<<<<<< Updated upstream
 		NVIC_EnableIRQn(IntIndex);
 	}
 	else
 	{
+=======
+	}else{
+>>>>>>> Stashed changes
 		FlexCANx->IMASK1 &= ~(1 << MbIndex);
-		NVIC_DisableIRQn(IntIndex);
 	}
 }
 

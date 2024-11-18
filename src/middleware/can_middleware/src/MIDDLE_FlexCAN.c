@@ -35,7 +35,11 @@
  */
 #define NVIC_FLEXCAN_Index { CAN0_ORed_IRQn, CAN0_Error_IRQn, CAN1_ORed_IRQn, CAN1_Error_IRQn, CAN2_ORed_IRQn, CAN2_Error_IRQn }
 
+#define NVIC_MB_FLEXCAN_INDEX {CAN0_ORed_0_15_MB_IRQn, CAN1_ORed_0_15_MB_IRQn, CAN2_ORed_0_15_MB_IRQn, CAN0_ORed_16_31_MB_IRQn};
+
 #define NVIC_FLEXCAN_COUNT	6U
+
+#define NVIC_FLEXCAN_MB_COUNT	4U
 
 #define FLEXCAN_GET_FREQ(ClkSrc) \
 		((ClkSrc == FlexCAN_CLKSRC_SYS) ? SCG_GetSysFreq() :\
@@ -63,6 +67,8 @@ static FlexCAN_MbType *FlexCAN_MB[FLEXCAN_INSTANCE_COUNT]  = FLEXCAN_MB_BASE_PTR
  * @note This array is indexed by FLEXCAN instance numbers.
  */
 static IRQn_Type NVIC_FLEXCAN[NVIC_FLEXCAN_COUNT]	= NVIC_FLEXCAN_Index;
+
+static IRQn_Type NVIC_MBFLEXCAN[NVIC_FLEXCAN_MB_COUNT]	= NVIC_MB_FLEXCAN_INDEX;
 
 /* ----------------------------------------------------------------------------
    -- Private functions
@@ -203,4 +209,15 @@ static void FlexCAN_NVIC_Control(FlexCAN_Instance_e Ins, FlexCAN_InterruptType I
 	}
 }
 
-
+static void FlexCAN_NVIC_MbControl(FlexCAN_Instance_e Ins, FlexCAN_MbIndex_e MbIndex, bool IsEnableInt){
+	IRQn_Type IRQNumber = NVIC_MBFLEXCAN[0];
+	if(Ins == FlexCAN0_Ins){
+		if(MbIndex < 16){
+			IRQNumber = NVIC_MBFLEXCAN[0];
+		}else{
+			IRQNumber = NVIC_MBFLEXCAN[3];
+		}
+	}else{
+		IRQNumber = NVIC_MBFLEXCAN[Ins];
+	}
+}
