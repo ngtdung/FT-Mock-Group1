@@ -40,7 +40,7 @@ LpitStatusType DRV_LPIT_Init(LpitInsType Lpit_ins, const LpitConfigType * UserCo
             Lpit_SetTimerOperationMode(lpitBase, (UserConfig->channel)[idx], UserConfig->timer_mode);
 
             /* Timer stop on timeout */
-            Lpit_SetTimerStopOnInterrupt(lpitBase, (UserConfig->channel)[idx], UserConfig->timer_stop_on_interrup);
+            Lpit_SetTimerStopOnInterrupt(lpitBase, (UserConfig->channel)[idx], UserConfig->timer_stop_on_interrupt);
         }
 
         /* Enable channel interrupt */
@@ -53,6 +53,7 @@ LpitStatusType DRV_LPIT_Init(LpitInsType Lpit_ins, const LpitConfigType * UserCo
             /* Set call back function when interrupt occur */
             s_callback = UserConfig->callback;
         }
+        else {}
     }
     else
     {
@@ -112,6 +113,7 @@ void LPIT0_Ch0_IRQHandler(void)
         /* Call App_Lpit_Callback */
         (*s_callback)(LPIT_CHANNEL_0);
     }
+    else {}
 }
 
 /* Interrupt service routine for LPIT0 - channle 1 */
@@ -166,12 +168,6 @@ LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins)
         LPIT_Type * lpitBase = LPIT_Base_Addr[Lpit_ins];
         /* Reset the timer channels and registers */
         Lpit_ResetTimer(lpitBase);
-
-        /* Disable interrupt on NVIC for LPIT channel */
-        NVIC_DisableIRQn(LPIT0_Ch0_IRQn);
-        NVIC_DisableIRQn(LPIT0_Ch1_IRQn);
-        NVIC_DisableIRQn(LPIT0_Ch2_IRQn);
-        NVIC_DisableIRQn(LPIT0_Ch3_IRQn);
 
         /* Set call back function when interrupt occur */
         s_callback = DRV_LPIT_NULL_PTR;

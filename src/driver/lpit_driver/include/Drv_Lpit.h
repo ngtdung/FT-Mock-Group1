@@ -25,7 +25,7 @@ typedef void (*Lpit0_Callback_t)(uint8_t);
 /* Enum stores the channels of LPIT */
 typedef enum
 {
-    LPIT_CHANNEL_0 = 0U, /*!< LPIT channel number 0*/
+    LPIT_CHANNEL_0 = 0U, /*!< LPIT channel number 0 */
     LPIT_CHANNEL_1,      /*!< LPIT channel number 1 */
     LPIT_CHANNEL_2,      /*!< LPIT channel number 2 */
     LPIT_CHANNEL_3,      /*!< LPIT channel number 3 */
@@ -97,7 +97,7 @@ typedef struct
     uint8_t num_of_channel;
     LpitTimerModeType timer_mode;
     LpitInterruptType * interrupt;
-    LpitTimerStopOnInterrupType timer_stop_on_interrup;
+    LpitTimerStopOnInterrupType timer_stop_on_interrupt;
     uint8_t num_of_interrupt;
     Lpit0_Callback_t callback;
 } LpitConfigType;

@@ -2,7 +2,7 @@
  * Mid_Lpit.c
  *
  *  Created on: Nov 7, 2024
- *      Author: HI
+ *      Author: BienTD
  */
 /*******************************************************************************
 * Include
@@ -45,6 +45,13 @@ static void MID_LPIT_InitClock(void);
   */
 static void MID_LPIT_EnableInterruptChannel(void);
 
+/**
+  * @brief  This function does not allow to interrupt LPIT channel in NVIC
+  * @param  None
+  * @retval None
+  */
+static void MID_LPIT_DisableInterruptChannel(void) ;
+
 /*******************************************************************************
 * Code
 *******************************************************************************/
@@ -77,6 +84,7 @@ void MID_LPIT_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel)
 void MID_LPIT_Deinit(LpitInsType Lpit_ins)
 {
 	DRV_LPIT_Deinit(Lpit_ins);
+    MID_LPIT_DisableInterruptChannel();
 }
 
 static void MID_LPIT_InitClock(void)
@@ -108,6 +116,15 @@ static void MID_LPIT_EnableInterruptChannel(void)
                 break;
         }
     }
+}
+
+static void MID_LPIT_DisableInterruptChannel(void) 
+{
+    /* Disable interrupt on NVIC for LPIT channel */
+    NVIC_DisableIRQn(LPIT0_Ch0_IRQn);
+    NVIC_DisableIRQn(LPIT0_Ch1_IRQn);
+    NVIC_DisableIRQn(LPIT0_Ch2_IRQn);
+    NVIC_DisableIRQn(LPIT0_Ch3_IRQn);
 }
 
 /*******************************************************************************
