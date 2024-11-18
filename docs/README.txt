@@ -1,1 +1,0 @@
-This is mock1's folder.
