@@ -217,7 +217,7 @@ typedef struct
 	FlexCAN_MsgIDType_e 		IdType;
 	bool				IsRemote;
 	uint8_t				DataLen;
-	uint16_t 			MbID;
+	uint32_t 			MbID;
 	bool				IsEnableMbInt;
 }FlexCAN_MbHeaderType;
 
