@@ -60,9 +60,9 @@ typedef void (*FlexCAN_CallbackType)(void);
 /* Structures and enums for CAN configuration */
 typedef enum
 {
-    FlexCAN0_Ins = 0U,
-    FlexCAN1_Ins = 1U,
-    FlexCAN2_Ins = 2U,
+    FlexCAN0_INS = 0U,
+    FlexCAN1_INS = 1U,
+    FlexCAN2_INS = 2U,
 }FlexCAN_Instance_e;
 
 typedef enum
