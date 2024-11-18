@@ -156,7 +156,8 @@ void FlexCAN_CallbackRegister(FlexCAN_Instance_e Ins, FlexCAN_CallbackType Callb
 }
 
 void FlexCAN_MbInit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex,
-					FlexCAN_MbHeaderType * FLexCAN_MbConfig){
+					FlexCAN_MbHeaderType * FLexCAN_MbConfig)
+{
 	FlexCAN_MbStructureType * Mbx = &((FlexCAN_MB[FlexCAN_Ins])->MB[MbIndex]);
 
 	FlexCAN_MBSetEDL(Mbx, FLexCAN_MbConfig->EDL);
@@ -183,7 +184,8 @@ void FlexCAN_MbInit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex,
 }
 
 void FlexCAN_Transmit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex,
-		              uint8_t * MsgData){
+		              uint8_t * MsgData)
+{
 	FLEXCAN_Type * FlexCANx = FlexCAN_Base_Addr[FlexCAN_Ins];
 	FlexCAN_MbStructureType * Mbx = &((FlexCAN_MB[FlexCAN_Ins])->MB[MbIndex]);
 	uint8_t DataLen = (((Mbx->Header[0]) & FLEXCAN_RAMn_DATA_WORD_0_DLC_MASK)
@@ -201,7 +203,8 @@ void FlexCAN_Transmit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex,
 	Mbx->Payload[1] = 0;
 
 	/* Message data to RAM */
-	for(Index = 0; Index < DataLen; Index++){
+	for(Index = 0; Index < DataLen; Index++)
+	{
 		WordIndex = Index / WordSize;
 		ByteOffset = 3 - (Index % WordSize);
 		Mbx->Payload[WordIndex] |= MsgData[Index] << (8 * ByteOffset);
@@ -215,6 +218,7 @@ void FlexCAN_Transmit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex,
 void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex,
 		                     uint8_t * MsgData){
 
+	FLEXCAN_Type * FlexCANx = FlexCAN_Base_Addr[FlexCAN_Ins];
 	FlexCAN_MbStructureType * Mbx = &((FlexCAN_MB[FlexCAN_Ins])->MB[MbIndex]);
 	uint8_t DataLen = (((Mbx->Header[0]) & FLEXCAN_RAMn_DATA_WORD_0_DLC_MASK)
 							>> FLEXCAN_RAMn_DATA_WORD_0_DLC_SHIFT);
@@ -223,14 +227,15 @@ void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e M
 	uint8_t WordSize = 4;
 	uint8_t ByteOffset = 0;
 
-	for(Index = 0; Index < DataLen; Index++){
+	for(Index = 0; Index < DataLen; Index++)
+	{
 		WordIndex = (Index / WordSize);
 		ByteOffset = 3 - (Index % WordSize);
 		MsgData[Index] = ((Mbx->Payload[WordIndex]) >> (8 * ByteOffset));
 	}
+	
 	/* Unlock the Mailbox */
-	(void)((Mbx->Header[0]) & FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_MASK
-			>> FLEXCAN_RAMn_DATA_WORD_0_TIME_STAMP_SHIFT);
+	(void)(FlexCANx->TIMER);
 }
 
 /* ----------------------------------------------------------------------------
@@ -262,9 +267,9 @@ static void FlexCAN_ClkSrcSelect(FLEXCAN_Type *FlexCANx, FlexCAN_ClkSrc_e CLkSrc
 
 static void FlexCAN_ClearMB(FLEXCAN_Type *FlexCANx)
 {
-	uint8_t i = 0;
+    uint8_t i = 0;
 
-	/* Clears all MBs of FlexCAN module */
+   /* Clears all MBs of FlexCAN module */
    for(i = 0U; i < 128U ;i++)
    {
 	   FlexCANx->RAMn[i] = 0x0;
@@ -381,16 +386,16 @@ static void FLexCAN_FreezeModeControl(FLEXCAN_Type *FlexCANx, uint8_t EnOrDis)
 {
 	if(EnOrDis == ENABLE)
 	{
-		/* Enters freeze mode */
-		FlexCANx->MCR |= FLEXCAN_MCR_FRZ_MASK;
+	   /* Enters freeze mode */
+	   FlexCANx->MCR |= FLEXCAN_MCR_FRZ_MASK;
 
 	   /* Wait for FRZACK */
 	   while(((FlexCANx->MCR & FLEXCAN_MCR_FRZACK_MASK) >> FLEXCAN_MCR_FRZACK_SHIFT) != SET);
 	}
 	else
 	{
-		/* Exits freeze mode */
-		FlexCANx->MCR &= ~FLEXCAN_MCR_FRZ_MASK;
+	   /* Exits freeze mode */
+	   FlexCANx->MCR &= ~FLEXCAN_MCR_FRZ_MASK;
 
 	   /* Wait for FRZACK to clear (not in freeze mode) */
 	   while ((FlexCANx->MCR & FLEXCAN_MCR_FRZACK_MASK) >> FLEXCAN_MCR_FRZACK_SHIFT);
@@ -409,27 +414,32 @@ static void FlexCAN_SoftReset(FLEXCAN_Type *FlexCANx)
 	while(((FlexCANx->MCR & FLEXCAN_MCR_SOFTRST_MASK) >> FLEXCAN_MCR_SOFTRST_SHIFT) == SET);
 }
 
-static void FlexCAN_MBSetEDL(FlexCAN_MbStructureType * Mbx, uint8_t EDLValue){
+static void FlexCAN_MBSetEDL(FlexCAN_MbStructureType * Mbx, uint8_t EDLValue)
+{
 	Mbx->Header[0] &= ~FLEXCAN_RAMn_DATA_WORD_0_EDL_MASK;
 	Mbx->Header[0] |= FLEXCAN_RAMn_DATA_WORD_0_EDL(EDLValue);
 }
 
-static void FlexCAN_MBSetBRS(FlexCAN_MbStructureType * Mbx, uint8_t BRSValue){
+static void FlexCAN_MBSetBRS(FlexCAN_MbStructureType * Mbx, uint8_t BRSValue)
+{
 	Mbx->Header[0] &= ~FLEXCAN_RAMn_DATA_WORD_0_BRS_MASK;
 	Mbx->Header[0] |= FLEXCAN_RAMn_DATA_WORD_0_BRS(BRSValue);
 }
 
-static void FlexCAN_MBSetESI(FlexCAN_MbStructureType * Mbx, uint8_t ESIValue){
+static void FlexCAN_MBSetESI(FlexCAN_MbStructureType * Mbx, uint8_t ESIValue)
+{
 	Mbx->Header[0] &= ~FLEXCAN_RAMn_DATA_WORD_0_ESI_MASK;
 	Mbx->Header[0] |= FLEXCAN_RAMn_DATA_WORD_0_ESI(ESIValue);
 }
 
-static void FlexCAN_MBSetIDType(FlexCAN_MbStructureType * Mbx, FlexCAN_MsgIDType_e IDType){
+static void FlexCAN_MBSetIDType(FlexCAN_MbStructureType * Mbx, FlexCAN_MsgIDType_e IDType)
+{
 	Mbx->Header[0] &= ~FLEXCAN_RAMn_DATA_WORD_0_IDE_MASK;
 	Mbx->Header[0] |= FLEXCAN_RAMn_DATA_WORD_0_IDE(IDType);
 }
 
-static void FlexCAN_MBSetRTR(FlexCAN_MbStructureType * Mbx, bool IsRemote){
+static void FlexCAN_MBSetRTR(FlexCAN_MbStructureType * Mbx, bool IsRemote)
+{
 	Mbx->Header[0] &= ~FLEXCAN_RAMn_DATA_WORD_0_RTR_MASK;
 	Mbx->Header[0] |= FLEXCAN_RAMn_DATA_WORD_0_RTR(IsRemote);
 }
@@ -444,36 +454,52 @@ static void FlexCAN_MBSetID(FlexCAN_MbStructureType * Mbx, uint16_t ID){
 	Mbx->Header[1] |= FLEXCAN_RAMn_DATA_WORD_1_ID(ID);
 }
 
-static void FlexCAN_MbSetType(FlexCAN_MbStructureType * Mbx, FlexCAN_MbType_e MbType){
+static void FlexCAN_MbSetType(FlexCAN_MbStructureType * Mbx, FlexCAN_MbType_e MbType)
+{
 	Mbx->Header[0] &= ~FLEXCAN_RAMn_DATA_WORD_0_CODE_MASK;
-	if(MbType == FlexCAN_MB_TX){
+	
+	if(MbType == FlexCAN_MB_TX)
+	{
 		/* Set code to INACTIVE status */
 		Mbx->Header[0] |= FLEXCAN_RAMn_DATA_WORD_0_CODE(Tx_CODE_INACTIVE);
-	}else{
+	}
+	else
+	{
 		Mbx->Header[0] |= FLEXCAN_RAMn_DATA_WORD_0_CODE(Rx_CODE_EMPTY);
 	}
 }
 
-static void FlexCAN_MbSetInterrupt(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, bool IsEnableMbInt){
+static void FlexCAN_MbSetInterrupt(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, bool IsEnableMbInt)
+{
 	FLEXCAN_Type * FlexCANx = FlexCAN_Base_Addr[FlexCAN_Ins];
 	IRQn_Type IntIndex = DMA0_IRQn;
 
-	if(FlexCAN_Ins == 0){
-		if(MbIndex <= 15){
+	if(FlexCAN_Ins == 0)
+	{
+		if(MbIndex <= 15)
+		{
 			IntIndex = CAN0_ORed_0_15_MB_IRQn;
-		}else{
+		}else
+		{
 			IntIndex = CAN0_ORed_16_31_MB_IRQn;
 		}
-	}else if(FlexCAN_Ins == 1){
+	}
+	else if(FlexCAN_Ins == 1)
+	{
 		IntIndex = CAN1_ORed_0_15_MB_IRQn;
-	}else{
+	}
+	else
+	{
 		IntIndex = CAN2_ORed_0_15_MB_IRQn;
 	}
 
-	if(IsEnableMbInt){
+	if(IsEnableMbInt)
+	{
 		FlexCANx->IMASK1 |= (1 << MbIndex);
 		NVIC_EnableIRQn(IntIndex);
-	}else{
+	}
+	else
+	{
 		FlexCANx->IMASK1 &= ~(1 << MbIndex);
 		NVIC_DisableIRQn(IntIndex);
 	}
