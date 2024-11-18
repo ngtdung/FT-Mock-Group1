@@ -143,6 +143,7 @@ void Middle_FlexCAN_StandardReceiveMbInit(FlexCAN_Instance_e Ins,
 			.IsEnableMbInt = Interrupt
 	};
 	FlexCAN_MbInit(Ins, MbIndex, &MB);
+	FlexCAN_NVIC_MbControl(Ins, MbIndex, Interrupt);
 }
 
 void Middle_FlexCAN_StandardTransmitMbInit(FlexCAN_Instance_e Ins,
@@ -160,6 +161,7 @@ void Middle_FlexCAN_StandardTransmitMbInit(FlexCAN_Instance_e Ins,
 			.IsEnableMbInt = Interrupt
 	};
 	FlexCAN_MbInit(Ins, MbIndex, &MB);
+	FlexCAN_NVIC_MbControl(Ins, MbIndex, Interrupt);
 }
 
 /* ----------------------------------------------------------------------------
