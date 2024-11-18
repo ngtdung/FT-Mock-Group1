@@ -202,9 +202,10 @@ typedef struct
 	FlexCAN_InterruptType		IntControl;
 }FlexCAN_ConfigType;
 
-typedef enum{
+typedef enum
+{
 	FlexCAN_STANDARD = 0U,
-	FlexCAN_EXT = 1U
+	FlexCAN_EXTENDED = 1U
 }FlexCAN_MsgIDType_e;
 
 typedef struct
@@ -212,8 +213,8 @@ typedef struct
 	uint8_t 			EDL;
 	uint8_t 			BRS;
 	uint8_t 			ESI;
-	FlexCAN_MbType_e	MbType;
-	FlexCAN_MsgIDType_e IdType;
+	FlexCAN_MbType_e		MbType;
+	FlexCAN_MsgIDType_e 		IdType;
 	bool				IsRemote;
 	uint8_t				DataLen;
 	uint16_t 			MbID;
