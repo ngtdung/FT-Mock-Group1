@@ -14,13 +14,16 @@
 
 #include "S32K144.h"
 #include "../src/driver/adc_driver/include/ADC_Driver.h"
-#include "FlexCAN.h"
+#include "../src/driver/can_driver/include/FlexCAN.h"
 #include "../src/driver/clock_driver/include/CLOCK.h"
 #include "../src/driver/gpio_driver/include/GPIO_Driver.h"
 #include "../src/driver/NVIC/include/NVIC.h"
 #include "../src/driver/port_driver/include/PORT_Driver.h"
-//#include "UART"
-//#include "assert.h"
+#include "../src/driver/lpit_driver/include/Drv_Lpit.h"
+#include "../src/driver/uart_driver/include/DRV_LPUART.h"
+#include "../src/driver/adc_driver/include/ADC_Driver.h"
+#include "../src/type_common/type_common.h"
+#include "assert.h"
 
 
 #define ENABLE 1u

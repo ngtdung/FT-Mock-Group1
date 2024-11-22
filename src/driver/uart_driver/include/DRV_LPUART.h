@@ -33,7 +33,7 @@ typedef enum
 typedef enum
 {
     DRV_UART_notUsingInterrupts = 0x00U,                    /*!< Not use interrupt to perform UART transfer */
-    DRV_UART_usingInterrupts    = 0x01U                     /*!< Using interrupts to perform UART transfer */
+    DRV_UART_usingInterrupts    = 0x01U,                     /*!< Using interrupts to perform UART transfer */
 } DRV_UART_TransferType;
 
  typedef enum

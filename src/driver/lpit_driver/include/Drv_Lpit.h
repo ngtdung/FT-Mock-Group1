@@ -10,16 +10,14 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "Driver_Header.h"
-
+#include "S32K144.h"
 
 /*******************************************************************************
 * Definitions
 *******************************************************************************/
 
-#define NULL	            ((void*)0)
-#define LPIT_MAX_CHANNEL    3U
-#define TRUE                1U
+#define DRV_LPIT_NULL_PTR       ((void*)0)
+#define DRV_LPIT_MAX_CHANNEL    3U
 
 /* Define function pointer use when callback function */
 typedef void (*Lpit0_Callback_t)(uint8_t);
@@ -63,24 +61,24 @@ typedef enum
 typedef enum
 {
     LPIT_IRQ_DISABLE    = 0,
-    LPIT_IRQ_CHANNEL_0 	= (1U << 0), /*!< Channel 0 Timer interrupt */
-    LPIT_IRQ_CHANNEL_1 	= (1U << 1), /*!< Channel 1 Timer interrupt */
-    LPIT_IRQ_CHANNEL_2 	= (1U << 2), /*!< Channel 2 Timer interrupt */
-    LPIT_IRQ_CHANNEL_3 	= (1U << 3), /*!< Channel 3 Timer interrupt */
+    LPIT_IRQ_CHANNEL_0  = (1U << 0), /*!< Channel 0 Timer interrupt */
+    LPIT_IRQ_CHANNEL_1  = (1U << 1), /*!< Channel 1 Timer interrupt */
+    LPIT_IRQ_CHANNEL_2  = (1U << 2), /*!< Channel 2 Timer interrupt */
+    LPIT_IRQ_CHANNEL_3  = (1U << 3), /*!< Channel 3 Timer interrupt */
 } LpitInterruptType;
 
 /* Enum stores toggle options for Debug mode */
 typedef enum
 {
     LPIT_DEBUG_MODE_DISABLE = 0U,
-    LPIT_DEBUG_MODE_ENABLE	= 1U
+    LPIT_DEBUG_MODE_ENABLE  = 1U
 } LpitDebugModeType;
 
 /* Enum stores toggle options for Doze mode */
 typedef enum
 {
-    LPIT_DOZE_MODE_DISABLE	= 0U,
-    LPIT_DOZE_MODE_ENABLE	= 1U
+    LPIT_DOZE_MODE_DISABLE  = 0U,
+    LPIT_DOZE_MODE_ENABLE   = 1U
 } LpitDozeModeType;
 
 /* Enum stores options timer stop on interrupt */
@@ -95,10 +93,12 @@ typedef struct
 {
     LpitDebugModeType debug_en;
     LpitDozeModeType doze_en;
-    LpitChannelType channel;
+    LpitChannelType * channel;
+    uint8_t num_of_channel;
     LpitTimerModeType timer_mode;
-    LpitInterruptType interrupt;
+    LpitInterruptType * interrupt;
     LpitTimerStopOnInterrupType timer_stop_on_interrup;
+    uint8_t num_of_interrupt;
     Lpit0_Callback_t callback;
 } LpitConfigType;
 
@@ -108,9 +108,8 @@ typedef enum {
 } LpitInsType;
 
 typedef enum {
-	SUCCESS,
-	FAIL,
-	TIMEOUT
+    SUCCESS,
+    FAIL
 } LpitStatusType;
 
 /*******************************************************************************
@@ -125,7 +124,7 @@ typedef enum {
   * @retval LpitStatusType: - SUCCESS    < Initialization successful >
   *                         - FAIL       < Initialization failed >
   */
-LpitStatusType DRV_Lpit_Init(LpitInsType Lpit_ins, const LpitConfigType * UserConfig);
+LpitStatusType DRV_LPIT_Init(LpitInsType Lpit_ins, const LpitConfigType * UserConfig);
 
 /**
   * @brief  This function function allows starting LPIT timer
@@ -135,7 +134,7 @@ LpitStatusType DRV_Lpit_Init(LpitInsType Lpit_ins, const LpitConfigType * UserCo
   * @retval LpitStatusType: - SUCCESS    < Successful action >
   *                         - FAIL       < Failed action >
   */
-LpitStatusType DRV_Lpit_StartTimer(LpitInsType Lpit_ins, LpitChannelType channel, int64_t timer_value);
+LpitStatusType DRV_LPIT_StartTimer(LpitInsType Lpit_ins, LpitChannelType channel, int64_t timer_value);
 
 /**
   * @brief  This function function allows stop LPIT timer
@@ -144,7 +143,7 @@ LpitStatusType DRV_Lpit_StartTimer(LpitInsType Lpit_ins, LpitChannelType channel
   * @retval LpitStatusType: - SUCCESS    < Successful action >
   *                         - FAIL       < Failed action >
   */
-LpitStatusType DRV_Lpit_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel);
+LpitStatusType DRV_LPIT_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel);
 
 /**
   * @brief  This function function allows deinit LPIT peripheral
@@ -153,7 +152,7 @@ LpitStatusType DRV_Lpit_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel)
   * @retval LpitStatusType: - SUCCESS    < Successful action >
   *                         - FAIL       < Failed action >
   */
-LpitStatusType DRV_Lpit_Deinit(LpitInsType Lpit_ins, LpitChannelType channel);
+LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins);
 
 #endif /* _DRV_LPIT_H_ */
 

@@ -71,12 +71,59 @@ typedef struct GPIO_PinConfig_t
                                      FUNCTION PROTOTYPES
 ==================================================================================================*/
 
+/**
+ * @brief Set the mode of a specific GPIO pin
+ *
+ * @param[in] pinConfig  Pointer to the GPIO pin config structure
+ *
+ * @return void
+ */
 void GPIO_Driver_ModeConfig(const GPIO_PinConfig_type *pinConfig);
+
+/**
+ * @brief Set the output of a specific GPIO pin to HIGH
+ *
+ * @param[in] pinCode  Pin code represent both PORT name and pin number
+ *
+ * @return void
+ */
 void GPIO_Driver_SetOutput(uint8_t pinCode);
 
+/**
+ * @brief Clear the output of a specific GPIO pin to LOW
+ *
+ * @param[in] pinCode  Pin code represent both PORT name and pin number
+ *
+ * @return void
+ */
 void GPIO_Driver_ClearOutput(uint8_t pinCode);
+
+/**
+ * @brief Toggle the output of a specific GPIO pin
+ *
+ * @param[in] pinCode  Pin code represent both PORT name and pin number
+ *
+ * @return void
+ */
 void GPIO_Driver_ToggleOutput(uint8_t pinCode);
+
+/**
+ * @brief Read the level of a specific GPIO pin
+ *
+ * @param[in] pinCode  Pin code represent both PORT name and pin number
+ *
+ * @return GPIO level type
+ */
 GPIO_Level_type GPIO_Driver_ReadPin(uint8_t pinCode);
+
+/**
+ * @brief Write a level to a specific GPIO pin
+ *
+ * @param[in] pinCode  Pin code represent both PORT name and pin number
+ * @param[in] level    GPIO level type
+ *
+ * @return void
+ */
 void GPIO_Driver_WritePin(uint8_t pinCode, const GPIO_Level_type level);
 
 

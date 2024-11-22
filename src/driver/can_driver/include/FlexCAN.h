@@ -2,7 +2,7 @@
  * FlexCAN.h
  *
  *  Created on: Oct 23, 2024
- *      Author: adm
+ *      Author: Le Hung
  */
 
 #ifndef FLEXCAN_H_
@@ -57,12 +57,21 @@
 
 typedef void (*FlexCAN_CallbackType)(void);
 
+/**
+ * @brief Enum type for Adc function return type
+ */
+typedef enum
+{
+    FLEXCAN_DRIVER_RETURN_CODE_ERROR     = 0U,
+    FLEXCAN_DRIVER_RETURN_CODE_SUCCESSED = 1U
+}FlexCAN_Driver_ReturnCode_e;
+
 /* Structures and enums for CAN configuration */
 typedef enum
 {
-    FlexCAN0_Ins = 0U,
-    FlexCAN1_Ins = 1U,
-    FlexCAN2_Ins = 2U,
+    FlexCAN0_INS = 0U,
+    FlexCAN1_INS = 1U,
+    FlexCAN2_INS = 2U,
 }FlexCAN_Instance_e;
 
 typedef enum
@@ -131,22 +140,51 @@ typedef struct
 
 typedef enum
 {
-	Rx_CODE_INACTIVE		= 0U,
-	Rx_CODE_EMPTY			= 4U,
-	Rx_CODE_FULL			= 2U,
-	Rx_CODE_OVERRUN			= 6U,
-	Rx_CODE_RANSWER			= 10U,
-	Rx_CODE_BUSY			= 1U
+	Rx_CODE_INACTIVE					= 0U,
+	Rx_CODE_EMPTY						= 4U,
+	Rx_CODE_FULL						= 2U,
+	Rx_CODE_OVERRUN						= 6U,
+	Rx_CODE_RANSWER						= 10U,
+	Rx_CODE_BUSY						= 1U
 }FlexCAN_RxCODE_e;
 
 typedef enum
 {
-	Tx_CODE_INACTIVE		= 8U,
-	Tx_CODE_ABORT			= 9U,
-	Tx_CODE_DATA			= 12U,
-	Tx_CODE_REMOTE			= 12U,
-	Tx_CODE_TANSWER			= 14U,
+	Tx_CODE_INACTIVE					= 8U,
+	Tx_CODE_ABORT						= 9U,
+	Tx_CODE_DATA						= 12U,
+	Tx_CODE_REMOTE						= 12U,
+	Tx_CODE_TANSWER						= 14U,
 }FlexCAN_TxCODE_e;
+
+typedef enum
+{
+	FlexCAN_STATUS_FLAG_ERRINT			= 1U,
+	FlexCAN_STATUS_FLAG_BOFFINT 		= 2U,
+	FlexCAN_STATUS_FLAG_RX				= 3U,
+	FlexCAN_STATUS_FLAG_FLTCONF 		= 4U,
+	FlexCAN_STATUS_FLAG_TX				= 6U,
+	FlexCAN_STATUS_FLAG_IDLE			= 7U,
+	FlexCAN_STATUS_FLAG_RXWRN			= 8U,
+	FlexCAN_STATUS_FLAG_TXWRN			= 9U,
+	FlexCAN_STATUS_FLAG_STFERR			= 10U,
+	FlexCAN_STATUS_FLAG_FRMERR			= 11U,
+	FlexCAN_STATUS_FLAG_CRCERR			= 12U,
+	FlexCAN_STATUS_FLAG_ACKERR			= 13U,
+	FlexCAN_STATUS_FLAG_BIT0ERR			= 14U,
+	FlexCAN_STATUS_FLAG_BIT1ERR 		= 15U,
+	FlexCAN_STATUS_FLAG_RWRNINT			= 16U,
+	FlexCAN_STATUS_FLAG_TWRNINT 		= 17U,
+	FlexCAN_STATUS_FLAG_SYNCH			= 18U,
+	FlexCAN_STATUS_FLAG_BOFFDONEINT 	= 19U,
+	FlexCAN_STATUS_FLAG_ERRINT_FAST 	= 20U,
+	FlexCAN_STATUS_FLAG_ERROVR			= 21U,
+	FlexCAN_STATUS_FLAG_STFERR_FAST		= 26U,
+	FlexCAN_STATUS_FLAG_FRMERR_FAST 	= 27U,
+	FlexCAN_STATUS_FLAG_CRCERR_FAST 	= 28U,
+	FlexCAN_STATUS_FLAG_BIT0ERR_FAST 	= 30U,
+	FlexCAN_STATUS_FLAG_BIT1ERR_FAST	= 31U
+}FlexCAN_StatusFlag_e;
 
 typedef enum
 {
@@ -184,6 +222,13 @@ typedef enum
     MB31
 } FlexCAN_MbIndex_e;
 
+typedef enum
+{
+	FLEXCAN_STATE_UNINIT		= 0U,
+	FLEXCAN_STATE_READY		= 1U,
+	FLEXCAN_STATE_STARTED		= 2U
+} FlexCAN_State_e;
+
 typedef struct
 {
 	FlexCAN_TxPin_e			TxPin;
@@ -193,17 +238,19 @@ typedef struct
 
 typedef struct
 {
-	uint32_t 				BitRate;
-	uint32_t 				ClkFreq;
+	uint8_t 			MaxNoMB;
+	uint32_t 			BitRate;
+	uint32_t 			ClkFreq;
 	FlexCAN_Mode_e			RunMode;
 	FlexCAN_ClkSrc_e		CLkSrc;
 	FlexCAN_PinType			PortPin;
-	FlexCAN_InterruptType	IntControl;
+	FlexCAN_InterruptType		IntControl;
 }FlexCAN_ConfigType;
 
-typedef enum{
+typedef enum
+{
 	FlexCAN_STANDARD = 0U,
-	FlexCAN_EXT = 1U
+	FlexCAN_EXTENDED = 1U
 }FlexCAN_MsgIDType_e;
 
 typedef struct
@@ -211,11 +258,11 @@ typedef struct
 	uint8_t 			EDL;
 	uint8_t 			BRS;
 	uint8_t 			ESI;
-	FlexCAN_MbType_e	MbType;
-	FlexCAN_MsgIDType_e IdType;
+	FlexCAN_MbType_e		MbType;
+	FlexCAN_MsgIDType_e 		IdType;
 	bool				IsRemote;
 	uint8_t				DataLen;
-	uint16_t 			MbID;
+	uint32_t 			MbID;
 	bool				IsEnableMbInt;
 }FlexCAN_MbHeaderType;
 
@@ -234,11 +281,13 @@ typedef struct
 #define MB_FLEXCAN_1	((FlexCAN_MbType*)0x40025080U)
 #define MB_FLEXCAN_2	((FlexCAN_MbType*)0x4002B080U)
 
-void FlexCAN_MbInit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, FlexCAN_MbHeaderType *FLexCAN_MbConfig);
-void FlexCAN_Init(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_ConfigType *FlexCAN_Config);
-void FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins);
-void FlexCAN_Transmit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, uint8_t * MsgData);
-void FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, uint8_t * MsgData);
-void FlexCAN_CallbackRegister(FlexCAN_Instance_e Ins, FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID);
+FlexCAN_Driver_ReturnCode_e FlexCAN_MbInit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, FlexCAN_MbHeaderType *FLexCAN_MbConfig);
+FlexCAN_Driver_ReturnCode_e FlexCAN_Init(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_ConfigType *FlexCAN_Config);
+FlexCAN_Driver_ReturnCode_e FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins);
+FlexCAN_Driver_ReturnCode_e FlexCAN_Transmit(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, uint8_t * MsgData);
+FlexCAN_Driver_ReturnCode_e FlexCAN_ReadMailboxData(FlexCAN_Instance_e FlexCAN_Ins, FlexCAN_MbIndex_e MbIndex, uint8_t * MsgData);
+FlexCAN_Driver_ReturnCode_e FlexCAN_CallbackRegister(FlexCAN_Instance_e Ins, FlexCAN_CallbackType CallbackFunc, uint8_t CallbackID);
+FlexCAN_State_e FlexCAN_GetModuleState(FlexCAN_Instance_e Ins);
+uint8_t FlexCAN_GetStatusFlag(FlexCAN_Instance_e Ins, FlexCAN_StatusFlag_e FlagType);
 
 #endif /* FLEXCAN_H_ */

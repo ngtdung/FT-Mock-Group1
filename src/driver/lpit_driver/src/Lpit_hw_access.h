@@ -74,7 +74,7 @@ static inline void Lpit_SetTimerStopOnInterrupt(LPIT_Type * LPITx, uint8_t chann
   */
 static inline void Lpit_EnableChannelInterrupt(LPIT_Type * LPITx, uint8_t interrupt)
 {
-		LPITx->MIER = ((LPITx->MIER) & ~(interrupt)) | interrupt ;
+		LPITx->MIER |= interrupt ;
 }
 
 /**

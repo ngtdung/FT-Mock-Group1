@@ -28,16 +28,14 @@
  * main implementation: use this 'C' sample to create your own application
  *
  */
-#include "S32K144.h"
+#include "App_Header.h"
 
-int main(void) 
+int main(void)
 {
+// 	App_Forwarder_Run();
+//	App_NodeSpeed_Run(); // vàng
+ 	App_NodeTemp_Run(); // xanh lá
 
-
-    for (;;) 
-    {
-
-    }
 
     return 0;
 }

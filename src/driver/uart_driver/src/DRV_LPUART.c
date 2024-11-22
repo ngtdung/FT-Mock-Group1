@@ -348,7 +348,7 @@ DRV_UART_StatusType DRV_UART_Init(const DRV_UART_InstanceType instance, const DR
 		/*Enable interrupt for given LPUART*/
 		if (DRV_UART_usingInterrupts == uartConfig->transferType)
 		{
-			NVIC->ISER[s_lpuartRxTxIrqId[instance] / 32] = 1 << (s_lpuartRxTxIrqId[instance] % 32);
+//			base->CTRL |= LPUART_CTRL_RIE_MASK;
 		}
 		s_UARTtxBufferstr[instance].txStatus = DRV_UART_stateReady;
 		s_UARTtxBufferstr[instance].isTxBusy = false;
@@ -838,8 +838,8 @@ static void DRV_UART_HanldeInterruptRx(DRV_UART_InstanceType instance)
 		{
 
 			/* disable interrupt rx*/
-			base->CTRL &= ~LPUART_CTRL_RIE_MASK; /*interrupt recieve*/
-			base->CTRL &= ~LPUART_CTRL_RE_MASK;
+//			base->CTRL &= ~LPUART_CTRL_RIE_MASK; /*interrupt recieve*/
+//			base->CTRL &= ~LPUART_CTRL_RE_MASK;
 			s_UARTrxBufferstr[instance].rxStatus = DRV_UART_stateReady;
 			s_UARTrxBufferstr[instance].isRxBusy = false;
 			if (s_UARTfunctionPointer[DRV_UART_callBackReceiver])

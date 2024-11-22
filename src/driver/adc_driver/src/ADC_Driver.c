@@ -30,7 +30,7 @@ extern "C" {
 */
 #define ADC0_ST_PRICISION_CH_U8           (0U)
 #define ADC0_ED_PRICISION_CH_U8           (15U)
-#define ADC0_INVALID_CHANEL               (ADCChannel_t)(16U)
+#define ADC0_INVALID_CHANEL               (ADC_Channel_type)(16U)
 
 
 /**
@@ -38,7 +38,7 @@ extern "C" {
  */
 #define ADC1_ST_PRICISION_CH_U8           (0U)
 #define ADC1_ED_PRICISION_CH_U8           (9U)
-#define ADC1_INVALID_CHANEL               (ADCChannel_t)(10U)
+#define ADC1_INVALID_CHANEL               (ADC_Channel_type)(10U)
 
 /* Register to pick data */
 #define CURRENT_DATA_RESULT_REG           (4U)
@@ -66,15 +66,15 @@ static uint8_t s_currentChannel = 0;
 ==================================================================================================*/
 
 
-static void ADC_ModuleConfig(ADC_Type * adcHwUnitId, ADCChannel_t channel, ADC_ModuleConfig_type *pConfig);
-static void PDB_ModuleConfig(PDB_Type *PDBTarget, uint8_t PDBIndex);
+static void DRV_ADC_ModuleConfig(ADC_Type * adcHwUnitId, ADC_Channel_type channel, ADC_ModuleConfig_type *pConfig);
+static void DRV_PDB_ModuleConfig(PDB_Type *PDBTarget, uint8_t PDBIndex);
 
 /*==================================================================================================
 *                                       LOCAL FUNCTIONS
 ==================================================================================================*/
 
 
-static void ADC_ModuleConfig(ADC_Type * adcHwUnitId, ADCChannel_t channel, ADC_ModuleConfig_type *pConfig)
+static void DRV_ADC_ModuleConfig(ADC_Type * adcHwUnitId, ADC_Channel_type channel, ADC_ModuleConfig_type *pConfig)
 {
     adcHwUnitId->SC3 = ADC_SC3_CAL_MASK | ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(pConfig->hwAvrgSelect);
     /* Wait for completion */
@@ -101,12 +101,11 @@ static void ADC_ModuleConfig(ADC_Type * adcHwUnitId, ADCChannel_t channel, ADC_M
     
 }
 
-static void PDB_ModuleConfig(PDB_Type *PDBTarget, uint8_t PDBIndex)
+static void DRV_PDB_ModuleConfig(PDB_Type *PDBTarget, uint8_t PDBIndex)
 {
 /* static void PDB_BusClockEnable(void) */
     /* Enable bus clock in PDB */
-    IP_PCC->PCCn[PDBIndex] |= PCC_PCCn_CGC_MASK;
-
+	PCC_PeriClockControl(PDBIndex, CLOCK_NOSRC_CLK, CLOCK_DIV_DISABLED, ENABLE);
 /* static void PDB_PeriodConfig(PDB_SC_Type *pConfig) */
     /* PRESCALER = 6: clk divided by (64 x Mult factor) */
     PDBTarget->SC = PDB_SC_PRESCALER(PDB_PRESCALER_DIV_64)
@@ -116,14 +115,14 @@ static void PDB_ModuleConfig(PDB_Type *PDBTarget, uint8_t PDBIndex)
     /* PDB Period = (System Clock / (Prescaler x Mult factor)) / Modulus */
     /* PDB Period = (48 MHz / (64 x 40)) / 18750 */
     /* PDB Period = (18750 Hz) / (18750) = 1 Hz */
-    PDBTarget->MOD = 18750;
+    PDBTarget->MOD = 1875;
 
 /* static void PDB_ChannelConfig(PDB_ChannelConfig_Type *pConfig) */
     /* TOS = 10h: Pre-trigger 4 asserts with DLY match */
     /* EN = 10h: Pre-trigger 4 enabled */
     PDBTarget->CH[0].C1 = (PDB_C1_TOS(0x10) | PDB_C1_EN(0x10));
     /* Delay set to half the PDB period = 9375 */
-    PDBTarget->CH[0].DLY[4] = 9375;
+    PDBTarget->CH[0].DLY[4] = 937;
 
 /* static void PDB_Enable(void) */
     /* Enable PDB. Load MOD and DLY */
@@ -150,7 +149,7 @@ static void PDB_ModuleConfig(PDB_Type *PDBTarget, uint8_t PDBIndex)
 * @post           Initializes the driver.
 *
 */
-ADC_Driver_ReturnCode_t ADC_Driver_Init(ADC_Type * adcHwUnitId, ADCChannel_t channel, IRQCallBack CallBackFunction)
+ADC_Driver_ReturnCode_t DRV_ADC_Init(ADC_Type * adcHwUnitId, ADC_Channel_type channel, IRQCallBack CallBackFunction)
 {
     ADC_Driver_ReturnCode_t retVal = ADC_DRIVER_RETURN_CODE_ERROR;
     PDB_Type * PDBTarget = IP_PDB0;
@@ -181,8 +180,8 @@ ADC_Driver_ReturnCode_t ADC_Driver_Init(ADC_Type * adcHwUnitId, ADCChannel_t cha
 
     if(ADC_DRIVER_RETURN_CODE_SUCCESSED == retVal)
     {
-        ADC_ModuleConfig(adcHwUnitId, channel, &pAdcConfig);
-        PDB_ModuleConfig(PDBTarget, PDBIndex);
+        DRV_ADC_ModuleConfig(adcHwUnitId, channel, &pAdcConfig);
+        DRV_PDB_ModuleConfig(PDBTarget, PDBIndex);
         ADC_CallBack = CallBackFunction;
     }
 
@@ -202,7 +201,7 @@ ADC_Driver_ReturnCode_t ADC_Driver_Init(ADC_Type * adcHwUnitId, ADCChannel_t cha
 *
 * @api
 */
-ADC_Driver_ReturnCode_t ADC_Driver_EnableIRQ(ADC_Type * adcHwUnitId, ADCChannel_t channel)
+ADC_Driver_ReturnCode_t DRV_ADC_EnableIRQ(ADC_Type * adcHwUnitId, ADC_Channel_type channel)
 {
     ADC_Driver_ReturnCode_t retVal = ADC_DRIVER_RETURN_CODE_ERROR;
     IRQn_Type irqTarget;
@@ -225,7 +224,7 @@ ADC_Driver_ReturnCode_t ADC_Driver_EnableIRQ(ADC_Type * adcHwUnitId, ADCChannel_
     if(ADC_DRIVER_RETURN_CODE_SUCCESSED == retVal)
     {
         s_currentChannel = channel;
-        NVIC->ISER[(uint32_t)(irqTarget) >> 5U] = (uint32_t)(1UL << ((uint32_t)(irqTarget) & (uint32_t)0x1FU));
+        NVIC_EnableIRQn(irqTarget);
 #ifndef UNITTEST
         /* all interrupts are allow for activity */
         __asm("cpsie i");

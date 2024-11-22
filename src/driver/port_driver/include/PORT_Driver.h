@@ -116,25 +116,60 @@ typedef struct PORT_PinConfig_t
 ==================================================================================================*/
 
 
+/**
+ * @brief Initialize a specific GPIO pin
+ *
+ * @param[in] pinConfig  Pointer to the PORT pin config structure
+ *
+ * @return void
+ */
 void PORT_Driver_InitPin(PORT_PinConfig_type *pinConfig);
 
+/**
+ * @brief Initialize multiple GPIO pins
+ *
+ * @param[in] arrayPinsConfig  Pointer to array of PORT pin config structures
+ * @param[in] numberPins  Number of pins to be configured
+ *
+ * @return void
+ */
 void PORT_Driver_InitMultiplePin(PORT_PinConfig_type *arrayPinsConfig[], int8_t numberPins);
 
-/** @brief This function use to read ISF interrupt flag for individual pin
- * @param base Base address of individual PORT module
- * @param pin Pin want to configure
- * @return: 0 if ISF flag is not set, 1: if ISF flag is set
+/**
+ * @brief Read ISF interrupt flag for individual pin
+ *
+ * @param[in] pinCode  Pin code represent both PORT name and pin number
+ *
+ * @return 0 if ISF flag is not set, 1 if ISF flag is set
  */
 uint8_t PORT_Driver_ReadInterruptFlagPin(uint8_t pinCode);
 
-/** @brief This function use to clear ISF interrupt flag for individual pin
- * @param base Base address of individual PORT module
- * @param pin Pin want to configure
+/**
+ * @brief Clear ISF interrupt flag for individual pin
+ *
+ * @param[in] pinCode  Pin code represent both PORT name and pin number
+ *
+ * @return void
  */
 void PORT_Driver_ClearInterruptFlagPin(uint8_t pinCode);
 
+/**
+ * @brief De-initialize a specific GPIO pin
+ *
+ * @param[in] pinCode  Pin code represent both PORT name and pin number
+ *
+ * @return void
+ */
 void PORT_Driver_DeinitPin(uint8_t pinCode);
 
+/**
+ * @brief De-initialize multiple GPIO pins
+ *
+ * @param[in] arrayPinCode  Pointer to array of pin codes
+ * @param[in] numberPins  Number of pins to be de-configured
+ *
+ * @return void
+ */
 void PORT_Driver_DeinitMultiplePin(uint8_t *arrayPinCode, uint8_t numberPins);
 
 

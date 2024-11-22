@@ -8,7 +8,11 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include src/middleware/uart_middleware/src/subdir.mk
+-include src/middleware/lpit_middleware/src/subdir.mk
+-include src/middleware/gpio_middleware/src/subdir.mk
 -include src/middleware/can_middleware/src/subdir.mk
+-include src/middleware/adc_middleware/src/subdir.mk
 -include src/driver/uart_driver/src/subdir.mk
 -include src/driver/port_driver/src/subdir.mk
 -include src/driver/lpit_driver/src/subdir.mk
@@ -17,6 +21,9 @@ RM := rm -rf
 -include src/driver/can_driver/src/subdir.mk
 -include src/driver/adc_driver/src/subdir.mk
 -include src/driver/NVIC/src/subdir.mk
+-include src/app/node_temperature/src/subdir.mk
+-include src/app/node_speed/src/subdir.mk
+-include src/app/node_forwarder/src/subdir.mk
 -include src/subdir.mk
 -include Project_Settings/Startup_Code/subdir.mk
 -include subdir.mk

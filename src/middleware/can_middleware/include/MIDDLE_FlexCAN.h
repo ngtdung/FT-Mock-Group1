@@ -51,10 +51,29 @@ typedef enum
 	MIDDLE_HANDLER_ORED_TYPE
 }Middle_FlexCAN_Handler_e;
 
-void Middle_FlexCAN_Init(FlexCAN_Instance_e Ins);
-void Middle_FlexCAN_DeInit(FlexCAN_Instance_e Ins);
-void Middle_FlexCAN_SetCallback(FlexCAN_Instance_e Ins, Middle_FlexCAN_Handler_e HandlerType, FlexCAN_CallbackType HandlerFunc);
-void Middle_FlexCAN_StandardTransmitMbInit(FlexCAN_Instance_e Ins, FlexCAN_MbIndex_e MbIndex, uint32_t ID, bool Interrupt);
-void Middle_FlexCAN_StandardReceiveMbInit(FlexCAN_Instance_e Ins, FlexCAN_MbIndex_e MbIndex, uint32_t ID, bool Interrupt);
+typedef enum
+{
+	MODULE_0_INS	= FlexCAN0_INS,
+	MODULE_1_INS	= FlexCAN1_INS,
+	MODULE_2_INS	= FlexCAN2_INS
+}Middle_CAN_ModuleIns_e;
+
+typedef struct
+{
+	FlexCAN_MbIndex_e 			MbIndex;
+	uint32_t 					MbID;
+	bool						MbInt;
+	FlexCAN_CallbackType 		HandlerFunc;
+	Middle_FlexCAN_Handler_e 	HandlerType;
+}Middle_CAN_UserConfigType;
+
+void Middle_FlexCAN_Init(Middle_CAN_ModuleIns_e Ins);
+void Middle_FlexCAN_DeInit(Middle_CAN_ModuleIns_e Ins);
+void Middle_FlexCAN_SetCallback(Middle_CAN_ModuleIns_e Ins, Middle_CAN_UserConfigType *UserConfig);
+void Middle_FlexCAN_StandardTransmitMbInit(Middle_CAN_ModuleIns_e Ins, Middle_CAN_UserConfigType *UserConfig);
+void Middle_FlexCAN_StandardReceiveMbInit(Middle_CAN_ModuleIns_e Ins, Middle_CAN_UserConfigType *UserConfig);
+void Middle_CAN_Transmit(Middle_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, uint8_t *TxBuffer);
+void Middle_CAN_Receive(Middle_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, uint8_t *RxBuffer);
+uint8_t Middle_FlexCAN_GetAckStatus(Middle_CAN_ModuleIns_e Ins);
 
 #endif /* INCLUDE_MIDDLE_FLEXCAN_H_ */

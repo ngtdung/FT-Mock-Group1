@@ -69,8 +69,8 @@ void PORT_Driver_InitPin(PORT_PinConfig_type *pinConfig)
     uint8_t port_instance = PORT_EXTRACT_INSTANCE(pinConfig->pinCode);
     PORT_Type *base = g_portBase[port_instance];
 
-    assert(pin < PORT_NUMBER_OF_PINS);
-    assert(port_instance < PORT_MAX_INSTANCE);
+//    assert(pin < PORT_NUMBER_OF_PINS);
+//    assert(port_instance < PORT_MAX_INSTANCE);
     if ((void *)0 != pinConfig)
     {
         /* Pullup/pulldown configure */

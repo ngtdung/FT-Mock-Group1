@@ -40,6 +40,8 @@ typedef struct {
 /* NVIC base pointer */
 #define NVIC					((NVIC_Type*)NVIC_BASE)
 
+#define NVIC_PR_BASEADDR        ((volatile uint32_t*)0xE000E400u)
+
 /* ----------------------------------------------------------------------------
    -- API
    ---------------------------------------------------------------------------- */
@@ -61,5 +63,7 @@ void NVIC_EnableIRQn(IRQn_Type IRQn);
  * @param IRQn The IRQ number (enum value) of the interrupt to disable.
  */
 void NVIC_DisableIRQn(IRQn_Type IRQn);
+
+void NVIC_IRQPriorityConfig(uint8_t IRQ_number, uint32_t IRQ_Priority);
 
 #endif /* INC_NVIC_H_ */
