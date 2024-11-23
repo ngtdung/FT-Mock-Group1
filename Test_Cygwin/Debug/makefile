@@ -8,18 +8,21 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include test/test_driver/uart/subdir.mk
 -include test/test_driver/port/subdir.mk
 -include test/test_driver/lpit/subdir.mk
 -include test/test_driver/gpio/subdir.mk
 -include test/test_driver/can/subdir.mk
 -include test/test_driver/adc/subdir.mk
 -include test/subdir.mk
+-include stub/driver/uart_stub/src/subdir.mk
 -include stub/driver/port_stub/src/subdir.mk
 -include stub/driver/nvic_stub/src/subdir.mk
 -include stub/driver/lpit_stub/src/subdir.mk
 -include stub/driver/gpio_stub/src/subdir.mk
 -include stub/driver/can_stub/src/subdir.mk
 -include stub/driver/adc_stub/src/subdir.mk
+-include driver/uart/src/subdir.mk
 -include driver/port/src/subdir.mk
 -include driver/lpit/src/subdir.mk
 -include driver/gpio/src/subdir.mk

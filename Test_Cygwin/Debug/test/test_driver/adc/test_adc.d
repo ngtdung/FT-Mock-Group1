@@ -28,6 +28,7 @@ test/test_driver/adc/test_adc.o: ../test/test_driver/adc/test_adc.cpp \
  D:\eclipse-workspace\Test_Cygwin\stub\driver\port_stub\include/port_stub.h \
  D:\eclipse-workspace\Test_Cygwin\stub\driver\gpio_stub\include/gpio_stub.h \
  D:\eclipse-workspace\Test_Cygwin\stub\board/../driver/nvic_stub/include/irq_stub.h \
+ D:\eclipse-workspace\Test_Cygwin\stub\board/../driver/uart_stub/include/uart_stub.h \
  D:\eclipse-workspace\Test_Cygwin\driver\adc\include/ADC_driver.h
 D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest.h:
 D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest-assertion-result.h:
@@ -58,4 +59,5 @@ D:\eclipse-workspace\Test_Cygwin\stub\driver\adc_stub\include/adc_stub.h:
 D:\eclipse-workspace\Test_Cygwin\stub\driver\port_stub\include/port_stub.h:
 D:\eclipse-workspace\Test_Cygwin\stub\driver\gpio_stub\include/gpio_stub.h:
 D:\eclipse-workspace\Test_Cygwin\stub\board/../driver/nvic_stub/include/irq_stub.h:
+D:\eclipse-workspace\Test_Cygwin\stub\board/../driver/uart_stub/include/uart_stub.h:
 D:\eclipse-workspace\Test_Cygwin\driver\adc\include/ADC_driver.h:

@@ -35,16 +35,19 @@ driver/can_driver/src \
 driver/gpio/src \
 driver/lpit/src \
 driver/port/src \
+driver/uart/src \
 stub/driver/adc_stub/src \
 stub/driver/can_stub/src \
 stub/driver/gpio_stub/src \
 stub/driver/lpit_stub/src \
 stub/driver/nvic_stub/src \
 stub/driver/port_stub/src \
+stub/driver/uart_stub/src \
 test \
 test/test_driver/adc \
 test/test_driver/can \
 test/test_driver/gpio \
 test/test_driver/lpit \
 test/test_driver/port \
+test/test_driver/uart \
 
