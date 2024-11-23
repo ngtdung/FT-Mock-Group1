@@ -20,11 +20,15 @@ test/test_driver/can/test_can.o: ../test/test_driver/can/test_can.cpp \
  D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest-typed-test.h \
  D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest_pred_impl.h \
  D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest_prod.h \
- D:\eclipse-workspace\Test_Cygwin\stub\driver\include/can_stub.h \
+ D:\eclipse-workspace\Test_Cygwin\stub\driver\can_stub\include/can_stub.h \
  D:\eclipse-workspace\Test_Cygwin\stub\board/generic.h \
  D:\eclipse-workspace\Test_Cygwin\driver\can_driver\include/FlexCAN.h \
- D:\eclipse-workspace\Test_Cygwin\stub\driver\include/S32K144.h \
- D:\eclipse-workspace\Test_Cygwin\stub\driver\include/can_stub.h
+ D:\eclipse-workspace\Test_Cygwin\stub\board/S32K144.h \
+ D:\eclipse-workspace\Test_Cygwin\stub\driver\lpit_stub\include/lpit_stub.h \
+ D:\eclipse-workspace\Test_Cygwin\stub\driver\adc_stub\include/adc_stub.h \
+ D:\eclipse-workspace\Test_Cygwin\stub\driver\port_stub\include/port_stub.h \
+ D:\eclipse-workspace\Test_Cygwin\stub\driver\gpio_stub\include/gpio_stub.h \
+ D:\eclipse-workspace\Test_Cygwin\stub\board/../driver/nvic_stub/include/irq_stub.h
 D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest.h:
 D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest-assertion-result.h:
 D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest-message.h:
@@ -46,8 +50,12 @@ D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest-test-part.h:
 D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest-typed-test.h:
 D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest_pred_impl.h:
 D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest_prod.h:
-D:\eclipse-workspace\Test_Cygwin\stub\driver\include/can_stub.h:
+D:\eclipse-workspace\Test_Cygwin\stub\driver\can_stub\include/can_stub.h:
 D:\eclipse-workspace\Test_Cygwin\stub\board/generic.h:
 D:\eclipse-workspace\Test_Cygwin\driver\can_driver\include/FlexCAN.h:
-D:\eclipse-workspace\Test_Cygwin\stub\driver\include/S32K144.h:
-D:\eclipse-workspace\Test_Cygwin\stub\driver\include/can_stub.h:
+D:\eclipse-workspace\Test_Cygwin\stub\board/S32K144.h:
+D:\eclipse-workspace\Test_Cygwin\stub\driver\lpit_stub\include/lpit_stub.h:
+D:\eclipse-workspace\Test_Cygwin\stub\driver\adc_stub\include/adc_stub.h:
+D:\eclipse-workspace\Test_Cygwin\stub\driver\port_stub\include/port_stub.h:
+D:\eclipse-workspace\Test_Cygwin\stub\driver\gpio_stub\include/gpio_stub.h:
+D:\eclipse-workspace\Test_Cygwin\stub\board/../driver/nvic_stub/include/irq_stub.h:

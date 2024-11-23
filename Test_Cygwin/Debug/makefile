@@ -8,10 +8,23 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include test/test_driver/port/subdir.mk
+-include test/test_driver/lpit/subdir.mk
+-include test/test_driver/gpio/subdir.mk
 -include test/test_driver/can/subdir.mk
+-include test/test_driver/adc/subdir.mk
 -include test/subdir.mk
--include stub/driver/src/subdir.mk
+-include stub/driver/port_stub/src/subdir.mk
+-include stub/driver/nvic_stub/src/subdir.mk
+-include stub/driver/lpit_stub/src/subdir.mk
+-include stub/driver/gpio_stub/src/subdir.mk
+-include stub/driver/can_stub/src/subdir.mk
+-include stub/driver/adc_stub/src/subdir.mk
+-include driver/port/src/subdir.mk
+-include driver/lpit/src/subdir.mk
+-include driver/gpio/src/subdir.mk
 -include driver/can_driver/src/subdir.mk
+-include driver/adc/src/subdir.mk
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(strip $(C++M_DEPS)),)
 -include $(C++M_DEPS)

@@ -1,0 +1,31 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../driver/gpio/src/GPIO_driver.c 
+
+C_DEPS += \
+./driver/gpio/src/GPIO_driver.d 
+
+OBJS += \
+./driver/gpio/src/GPIO_driver.o 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+driver/gpio/src/%.o: ../driver/gpio/src/%.c driver/gpio/src/subdir.mk
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cygwin C Compiler'
+	gcc -I"D:\eclipse-workspace\Test_Cygwin\driver\adc\include" -I"D:\eclipse-workspace\Test_Cygwin\driver\gpio\include" -I"D:\eclipse-workspace\Test_Cygwin\driver\lpit\include" -I"D:\eclipse-workspace\Test_Cygwin\driver\port\include" -I"D:\eclipse-workspace\Test_Cygwin\driver\lpit\include" -I"D:\eclipse-workspace\Test_Cygwin\stub\driver\adc_stub\include" -I"D:\eclipse-workspace\Test_Cygwin\stub\driver\gpio_stub\include" -I"D:\eclipse-workspace\Test_Cygwin\stub\driver\port_stub\include" -I"D:\eclipse-workspace\Test_Cygwin\stub\driver\lpit_stub\include" -I"D:\eclipse-workspace\Test_Cygwin\driver\lpit\include" -I"D:\eclipse-workspace\Test_Cygwin\libgtest\include" -I"D:\eclipse-workspace\Test_Cygwin\stub\board" -I"D:\eclipse-workspace\Test_Cygwin\stub\driver\can_stub\include" -I"D:\eclipse-workspace\Test_Cygwin\driver\can_driver\include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+
+clean: clean-driver-2f-gpio-2f-src
+
+clean-driver-2f-gpio-2f-src:
+	-$(RM) ./driver/gpio/src/GPIO_driver.d ./driver/gpio/src/GPIO_driver.o
+
+.PHONY: clean-driver-2f-gpio-2f-src
+

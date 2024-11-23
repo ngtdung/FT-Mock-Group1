@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="64" failures="0" disabled="0" errors="0" time="0.117" timestamp="2024-11-23T15:47:04.436" name="AllTests">
+  <testsuite name="ADCDriver" tests="13" failures="0" disabled="0" skipped="0" errors="0" time="0.008" timestamp="2024-11-23T15:47:04.438">
+    <testcase name="TC001" file="../test/test_driver/adc/test_adc.cpp" line="58" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.438" classname="ADCDriver" />
+    <testcase name="TC002" file="../test/test_driver/adc/test_adc.cpp" line="76" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.439" classname="ADCDriver" />
+    <testcase name="TC003" file="../test/test_driver/adc/test_adc.cpp" line="94" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.439" classname="ADCDriver" />
+    <testcase name="TC004" file="../test/test_driver/adc/test_adc.cpp" line="105" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.440" classname="ADCDriver" />
+    <testcase name="TC005" file="../test/test_driver/adc/test_adc.cpp" line="128" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.440" classname="ADCDriver" />
+    <testcase name="TC006" file="../test/test_driver/adc/test_adc.cpp" line="151" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.441" classname="ADCDriver" />
+    <testcase name="TC007" file="../test/test_driver/adc/test_adc.cpp" line="169" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.441" classname="ADCDriver" />
+    <testcase name="TC008" file="../test/test_driver/adc/test_adc.cpp" line="183" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.442" classname="ADCDriver" />
+    <testcase name="TC009" file="../test/test_driver/adc/test_adc.cpp" line="197" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.443" classname="ADCDriver" />
+    <testcase name="TC010" file="../test/test_driver/adc/test_adc.cpp" line="217" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.443" classname="ADCDriver" />
+    <testcase name="TC011" file="../test/test_driver/adc/test_adc.cpp" line="231" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.444" classname="ADCDriver" />
+    <testcase name="TC012" file="../test/test_driver/adc/test_adc.cpp" line="253" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.444" classname="ADCDriver" />
+    <testcase name="TC013" file="../test/test_driver/adc/test_adc.cpp" line="267" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.446" classname="ADCDriver" />
+  </testsuite>
+  <testsuite name="CAN_TEST" tests="15" failures="0" disabled="0" skipped="0" errors="0" time="0.031" timestamp="2024-11-23T15:47:04.448">
+    <testcase name="TC001" file="../test/test_driver/can/test_can.cpp" line="174" status="run" result="completed" time="0.001" timestamp="2024-11-23T15:47:04.449" classname="CAN_TEST" />
+    <testcase name="TC002" file="../test/test_driver/can/test_can.cpp" line="211" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.451" classname="CAN_TEST" />
+    <testcase name="TC003" file="../test/test_driver/can/test_can.cpp" line="256" status="run" result="completed" time="0.001" timestamp="2024-11-23T15:47:04.457" classname="CAN_TEST" />
+    <testcase name="TC004" file="../test/test_driver/can/test_can.cpp" line="288" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.459" classname="CAN_TEST" />
+    <testcase name="TC005" file="../test/test_driver/can/test_can.cpp" line="319" status="run" result="completed" time="0.001" timestamp="2024-11-23T15:47:04.461" classname="CAN_TEST" />
+    <testcase name="TC006" file="../test/test_driver/can/test_can.cpp" line="353" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.464" classname="CAN_TEST" />
+    <testcase name="TC007" file="../test/test_driver/can/test_can.cpp" line="377" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.465" classname="CAN_TEST" />
+    <testcase name="TC008" file="../test/test_driver/can/test_can.cpp" line="399" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.467" classname="CAN_TEST" />
+    <testcase name="TC009" file="../test/test_driver/can/test_can.cpp" line="421" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.471" classname="CAN_TEST" />
+    <testcase name="TC010" file="../test/test_driver/can/test_can.cpp" line="443" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.472" classname="CAN_TEST" />
+    <testcase name="TC011" file="../test/test_driver/can/test_can.cpp" line="468" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.474" classname="CAN_TEST" />
+    <testcase name="TC012" file="../test/test_driver/can/test_can.cpp" line="498" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.475" classname="CAN_TEST" />
+    <testcase name="TC013" file="../test/test_driver/can/test_can.cpp" line="528" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.476" classname="CAN_TEST" />
+    <testcase name="TC014" file="../test/test_driver/can/test_can.cpp" line="579" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.478" classname="CAN_TEST" />
+    <testcase name="TC015" file="../test/test_driver/can/test_can.cpp" line="634" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.479" classname="CAN_TEST" />
+  </testsuite>
+  <testsuite name="GPIODriver" tests="20" failures="0" disabled="0" skipped="0" errors="0" time="0.039" timestamp="2024-11-23T15:47:04.481">
+    <testcase name="TC001" file="../test/test_driver/gpio/test_gpio.cpp" line="45" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.482" classname="GPIODriver" />
+    <testcase name="TC002" file="../test/test_driver/gpio/test_gpio.cpp" line="61" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.483" classname="GPIODriver" />
+    <testcase name="TC003" file="../test/test_driver/gpio/test_gpio.cpp" line="77" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.488" classname="GPIODriver" />
+    <testcase name="TC004" file="../test/test_driver/gpio/test_gpio.cpp" line="93" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.490" classname="GPIODriver" />
+    <testcase name="TC005" file="../test/test_driver/gpio/test_gpio.cpp" line="110" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.492" classname="GPIODriver" />
+    <testcase name="TC006" file="../test/test_driver/gpio/test_gpio.cpp" line="133" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.493" classname="GPIODriver" />
+    <testcase name="TC007" file="../test/test_driver/gpio/test_gpio.cpp" line="142" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.495" classname="GPIODriver" />
+    <testcase name="TC008" file="../test/test_driver/gpio/test_gpio.cpp" line="151" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.497" classname="GPIODriver" />
+    <testcase name="TC009" file="../test/test_driver/gpio/test_gpio.cpp" line="160" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.501" classname="GPIODriver" />
+    <testcase name="TC010" file="../test/test_driver/gpio/test_gpio.cpp" line="169" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.503" classname="GPIODriver" />
+    <testcase name="TC011" file="../test/test_driver/gpio/test_gpio.cpp" line="186" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.504" classname="GPIODriver" />
+    <testcase name="TC012" file="../test/test_driver/gpio/test_gpio.cpp" line="195" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.505" classname="GPIODriver" />
+    <testcase name="TC013" file="../test/test_driver/gpio/test_gpio.cpp" line="204" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.507" classname="GPIODriver" />
+    <testcase name="TC014" file="../test/test_driver/gpio/test_gpio.cpp" line="213" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.508" classname="GPIODriver" />
+    <testcase name="TC015" file="../test/test_driver/gpio/test_gpio.cpp" line="222" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.510" classname="GPIODriver" />
+    <testcase name="TC016" file="../test/test_driver/gpio/test_gpio.cpp" line="240" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.511" classname="GPIODriver" />
+    <testcase name="TC017" file="../test/test_driver/gpio/test_gpio.cpp" line="249" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.512" classname="GPIODriver" />
+    <testcase name="TC018" file="../test/test_driver/gpio/test_gpio.cpp" line="258" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.513" classname="GPIODriver" />
+    <testcase name="TC019" file="../test/test_driver/gpio/test_gpio.cpp" line="267" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.518" classname="GPIODriver" />
+    <testcase name="TC020" file="../test/test_driver/gpio/test_gpio.cpp" line="276" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.520" classname="GPIODriver" />
+  </testsuite>
+  <testsuite name="LPITDriver" tests="6" failures="0" disabled="0" skipped="0" errors="0" time="0.01" timestamp="2024-11-23T15:47:04.523">
+    <testcase name="TC001" file="../test/test_driver/lpit/test_lpit_driver.cpp" line="105" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.523" classname="LPITDriver" />
+    <testcase name="TC002" file="../test/test_driver/lpit/test_lpit_driver.cpp" line="127" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.525" classname="LPITDriver" />
+    <testcase name="TC003" file="../test/test_driver/lpit/test_lpit_driver.cpp" line="153" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.526" classname="LPITDriver" />
+    <testcase name="TC004" file="../test/test_driver/lpit/test_lpit_driver.cpp" line="169" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.527" classname="LPITDriver" />
+    <testcase name="TC005" file="../test/test_driver/lpit/test_lpit_driver.cpp" line="184" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.529" classname="LPITDriver" />
+    <testcase name="TC006" file="../test/test_driver/lpit/test_lpit_driver.cpp" line="194" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.532" classname="LPITDriver" />
+  </testsuite>
+  <testsuite name="PORTDriver" tests="10" failures="0" disabled="0" skipped="0" errors="0" time="0.016" timestamp="2024-11-23T15:47:04.535">
+    <testcase name="TC001" file="../test/test_driver/port/test_port.cpp" line="60" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.535" classname="PORTDriver" />
+    <testcase name="TC002" file="../test/test_driver/port/test_port.cpp" line="93" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.537" classname="PORTDriver" />
+    <testcase name="TC003" file="../test/test_driver/port/test_port.cpp" line="126" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.538" classname="PORTDriver" />
+    <testcase name="TC004" file="../test/test_driver/port/test_port.cpp" line="159" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.539" classname="PORTDriver" />
+    <testcase name="TC005" file="../test/test_driver/port/test_port.cpp" line="192" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.541" classname="PORTDriver" />
+    <testcase name="TC006" file="../test/test_driver/port/test_port.cpp" line="233" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.542" classname="PORTDriver" />
+    <testcase name="TC007" file="../test/test_driver/port/test_port.cpp" line="246" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.543" classname="PORTDriver" />
+    <testcase name="TC008" file="../test/test_driver/port/test_port.cpp" line="259" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.547" classname="PORTDriver" />
+    <testcase name="TC009" file="../test/test_driver/port/test_port.cpp" line="272" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.548" classname="PORTDriver" />
+    <testcase name="TC0010" file="../test/test_driver/port/test_port.cpp" line="285" status="run" result="completed" time="0" timestamp="2024-11-23T15:47:04.550" classname="PORTDriver" />
+  </testsuite>
+</testsuites>
