@@ -17,7 +17,6 @@
 *******************************************************************************/
 
 #define DRV_LPIT_NULL_PTR       ((void*)0)
-#define DRV_LPIT_MAX_CHANNEL    3U
 
 /* Define function pointer use when callback function */
 typedef void (*Lpit0_Callback_t)(uint8_t);
@@ -35,7 +34,7 @@ typedef enum
 typedef enum
 {
     LPIT_PERIODIC_CNT = 0U,     /*!< Use the all 32-bits, counter loads and decrements to zero */
-    LPIT_DUAL_PERIODIC_CNT,     /*!< Counter loads, lower 16-bits  decrement to zero, then upper 16-bits  decrement */
+    LPIT_DUAL_PERIODIC_CNT,     /*!< Counter loads, lower 16-bits  decrement to zero, then upper 16-bits decrement */
     LPIT_TRIGGER_ACCU,          /*!< Counter loads on first trigger and decrements on each trigger */
     LPIT_INPUT_CAPTURE          /*!< Counter  loads with 0xFFFFFFFF, decrements to zero. It stores
                                 the inverse of the current value when a input trigger is detected */
@@ -108,8 +107,8 @@ typedef enum {
 } LpitInsType;
 
 typedef enum {
-    SUCCESS,
-    FAIL
+    LPIT_STT_SUCCESS,
+    LPIT_STT_FAIL
 } LpitStatusType;
 
 /*******************************************************************************

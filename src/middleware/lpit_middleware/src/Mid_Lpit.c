@@ -14,8 +14,8 @@
 *******************************************************************************/
 
 /* This variable allows the user to configure out function for LPIT peripheral */
-LpitChannelType LPIT_Channel_Config[] = {LPIT_CHANNEL_0};
-LpitInterruptType LPIT_IntChannel[] = {LPIT_IRQ_CHANNEL_0};
+LpitChannelType LPIT_Channel_Config[] = {LPIT_CHANNEL_0, LPIT_CHANNEL_1};
+LpitInterruptType LPIT_IntChannel[] = {LPIT_IRQ_CHANNEL_0, LPIT_IRQ_CHANNEL_1};
 
 LpitConfigType LPIT_Config = {
         .debug_en       = LPIT_DEBUG_MODE_ENABLE,

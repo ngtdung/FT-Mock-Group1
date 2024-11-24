@@ -19,7 +19,7 @@ static Lpit0_Callback_t s_callback;
 
 LpitStatusType DRV_LPIT_Init(LpitInsType Lpit_ins, const LpitConfigType * UserConfig)
 {
-    LpitStatusType statusFunc = SUCCESS;
+    LpitStatusType statusFunc = LPIT_STT_SUCCESS;
     uint8_t idx = 0;
 
     if ((UserConfig != DRV_LPIT_NULL_PTR) && (Lpit_ins == LPIT_INS_0))
@@ -57,7 +57,7 @@ LpitStatusType DRV_LPIT_Init(LpitInsType Lpit_ins, const LpitConfigType * UserCo
     }
     else
     {
-        statusFunc = FAIL;
+        statusFunc = LPIT_STT_FAIL;
     }
 
     return statusFunc;
@@ -65,12 +65,12 @@ LpitStatusType DRV_LPIT_Init(LpitInsType Lpit_ins, const LpitConfigType * UserCo
 
 LpitStatusType DRV_LPIT_StartTimer(LpitInsType Lpit_ins, LpitChannelType channel, int64_t timer_value)
 {
-    LpitStatusType statusFunc = SUCCESS;
+    LpitStatusType statusFunc = LPIT_STT_SUCCESS;
 
     if ((timer_value < 0) || ((uint64_t)timer_value > UINT32_MAX) || (Lpit_ins != LPIT_INS_0) ||
         (channel < LPIT_CHANNEL_0) || (channel > LPIT_CHANNEL_3))
     {
-        statusFunc = FAIL;
+        statusFunc = LPIT_STT_FAIL;
     }
     else
     {
@@ -87,11 +87,11 @@ LpitStatusType DRV_LPIT_StartTimer(LpitInsType Lpit_ins, LpitChannelType channel
 
 LpitStatusType DRV_LPIT_StopTimer(LpitInsType Lpit_ins, LpitChannelType channel)
 {
-    LpitStatusType statusFunc = SUCCESS;
+    LpitStatusType statusFunc = LPIT_STT_SUCCESS;
 
     if ((Lpit_ins != LPIT_INS_0) || (channel < LPIT_CHANNEL_0) || (channel > LPIT_CHANNEL_3))
     {
-        statusFunc = FAIL;
+        statusFunc = LPIT_STT_FAIL;
     }
     else
     {
@@ -157,11 +157,11 @@ void LPIT0_Ch3_IRQHandler(void)
 
 LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins)
 {
-    LpitStatusType statusFunc = SUCCESS;
+    LpitStatusType statusFunc = LPIT_STT_SUCCESS;
 
     if (Lpit_ins != LPIT_INS_0)
     {
-        statusFunc = FAIL;
+        statusFunc = LPIT_STT_FAIL;
     }
     else
     {

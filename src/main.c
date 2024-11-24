@@ -29,10 +29,38 @@
  *
  */
 #include "S32K144.h"
+#include "../src/middleware/lpit_middleware/include/Mid_Lpit.h"
+
+
+void App_LPIT_Callback(uint8_t channel)     /* cycle: 1s */
+{
+    switch (channel)
+    {
+        case 0:
+        {
+            uint8_t i = 0;
+            i++;
+            /* Your code */
+            break;
+        }
+
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        default:
+            break;
+    }
+}
 
 int main(void) 
 {
 
+    MID_LPIT_Init(LPIT_INS_0, App_LPIT_Callback);
+
+    MID_LPIT_StartTimer(LPIT_INS_0, LPIT_CHANNEL_0, 30000U);
 
     for (;;) 
     {
