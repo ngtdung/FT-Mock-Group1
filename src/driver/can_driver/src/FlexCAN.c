@@ -165,7 +165,7 @@ FlexCAN_Driver_ReturnCode_e FlexCAN_DeInit(FlexCAN_Instance_e FlexCAN_Ins)
 		/* De-Inits successfully */
 		RetVal = FLEXCAN_DRIVER_RETURN_CODE_SUCCESSED;
 	}
-	
+
 	return RetVal;
 }
 
@@ -407,7 +407,7 @@ static void FlexCAN_ClkSrcSelect(FLEXCAN_Type *FlexCANx, FlexCAN_ClkSrc_e CLkSrc
 static void FlexCAN_ClearMB(FLEXCAN_Type *FlexCANx)
 {
 	uint8_t i = 0;
-	
+
 	/* Clears all MBs of FlexCAN module */
    for(i = 0U; i < 128U ;i++)
    {
@@ -810,3 +810,4 @@ void CAN2_ORed_16_31_MB_IRQHandler()
 /* ----------------------------------------------------------------------------
    -- End of file
    ---------------------------------------------------------------------------- */
+

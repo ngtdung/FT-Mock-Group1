@@ -27,7 +27,7 @@ uint8_t Temp_value = 0;
 static void App_Read_Send_Temp_Data(void)
 {
 	Temp_value = MID_ADC_ReadData();
-	Middle_CAN_Transmit(FlexCAN0_INS, MB0, &Temp_value);
+	MID_CAN_Transmit(FlexCAN0_INS, MB0, &Temp_value);
 }
 
 
@@ -43,7 +43,7 @@ static void App_ProcessTempPing(Temp_Ping_State_t* State)
 static void App_CheckTempConnect(void)
 {
 	uint8_t ACK_State = 0;
-	ACK_State = Middle_FlexCAN_GetAckStatus(MODULE_0_INS);
+	ACK_State = MID_CAN_GetAckStatus(MODULE_0_INS);
 	if(ACK_State == 1)
 	{
 		Temp_Connect_State = TEMP_NOT_OK;
@@ -53,7 +53,7 @@ static void App_CheckTempConnect(void)
 static void App_TempReconnect(void)
 {
 	uint8_t ACK_State = 0;
-	ACK_State = Middle_FlexCAN_GetAckStatus(MODULE_0_INS);
+	ACK_State = MID_CAN_GetAckStatus(MODULE_0_INS);
 	if(Temp_Connect_State == TEMP_NOT_OK  && ACK_State == 0)
 	{
 		App_Read_Send_Temp_Data();
@@ -107,33 +107,33 @@ void App_NodeTemp_Run()
 {
 	MID_ADC_Init(&ADC_Cfg_Temp);
 	MID_LPIT_Init(LPIT_INS_0, LPIT_Callback_Temp);
-	Middle_FlexCAN_Init(FlexCAN0_INS);
-	Middle_CAN_UserConfigType UserCfgMBSendData = {
+	MID_CAN_Init(FlexCAN0_INS);
+	MID_CAN_UserConfigType UserCfgMBSendData = {
 			.HandlerFunc = NULL,
 			.MbID = 0x11,
 			.MbIndex = MB0,
 			.MbInt = true
 	};
 
-	Middle_CAN_UserConfigType UserCfgMBSendPing = {
+	MID_CAN_UserConfigType UserCfgMBSendPing = {
 			.HandlerFunc = NULL,
 			.MbID = 0x33,
 			.MbIndex = MB1,
 			.MbInt = true
 	};
 
-	Middle_FlexCAN_StandardTransmitMbInit(FlexCAN0_INS, &UserCfgMBSendData);
-	Middle_FlexCAN_StandardTransmitMbInit(FlexCAN0_INS, &UserCfgMBSendPing);
+	MID_CAN_StdTxMbInit(FlexCAN0_INS, &UserCfgMBSendData);
+	MID_CAN_StdTxMbInit(FlexCAN0_INS, &UserCfgMBSendPing);
 
-	Middle_CAN_UserConfigType UserCfgMBRequest = {
+	MID_CAN_UserConfigType UserCfgMBRequest = {
 			.HandlerFunc = App_Temp_RcvRequest,
 			.HandlerType = MIDDLE_HANDLER_MB_2_TYPE,
 			.MbID = 0x55,
 			.MbIndex = MB2,
 			.MbInt = true
 	};
-	Middle_FlexCAN_StandardReceiveMbInit(FlexCAN0_INS, &UserCfgMBRequest);
-	Middle_FlexCAN_SetCallback(FlexCAN0_INS, &UserCfgMBRequest);
+	MID_CAN_StdRxMbInit(FlexCAN0_INS, &UserCfgMBRequest);
+	MID_CAN_SetCallback(FlexCAN0_INS, &UserCfgMBRequest);
 
 	MID_LPIT_StartTimer(LPIT_INS_0, 0, 6000000);
 

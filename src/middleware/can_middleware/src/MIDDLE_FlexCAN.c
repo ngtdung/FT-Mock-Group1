@@ -80,14 +80,14 @@ CAN_MbStatus_e AllMbStatus[32] = { CAN_MB_INACTIVE };
 /* ----------------------------------------------------------------------------
    -- Private functions
    ---------------------------------------------------------------------------- */
-static void FlexCAN_PORT_Init(Middle_CAN_ModuleIns_e Ins, FlexCAN_PinType PortPin);
-static void FlexCAN_NVIC_Control(Middle_CAN_ModuleIns_e Ins, FlexCAN_InterruptType IntControl);
-static void FlexCAN_NVIC_MbControl(Middle_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, bool IsEnableInt);
+static void FlexCAN_PORT_Init(MID_CAN_ModuleIns_e Ins, FlexCAN_PinType PortPin);
+static void FlexCAN_NVIC_Control(MID_CAN_ModuleIns_e Ins, FlexCAN_InterruptType IntControl);
+static void FlexCAN_NVIC_MbControl(MID_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, bool IsEnableInt);
 
 /* ----------------------------------------------------------------------------
    -- Global functions
    ---------------------------------------------------------------------------- */
-void Middle_FlexCAN_Init(Middle_CAN_ModuleIns_e Ins)
+void MID_CAN_Init(MID_CAN_ModuleIns_e Ins)
 {
 	FlexCAN_ConfigType FlexCANConfig;
 
@@ -114,7 +114,7 @@ void Middle_FlexCAN_Init(Middle_CAN_ModuleIns_e Ins)
 	FlexCAN_Init(Ins, &FlexCANConfig);
 }
 
-void Middle_FlexCAN_DeInit(Middle_CAN_ModuleIns_e Ins)
+void MID_CAN_DeInit(MID_CAN_ModuleIns_e Ins)
 {
 	/* Deinit FlexCAN Driver */
 	FlexCAN_DeInit(Ins);
@@ -126,7 +126,7 @@ void Middle_FlexCAN_DeInit(Middle_CAN_ModuleIns_e Ins)
 	PCC_PeriClockControl(FlexCAN_PORT[Ins], CLOCK_NOSRC_CLK, CLOCK_DIV_DISABLED, DISABLE);
 }
 
-void Middle_FlexCAN_SetCallback(Middle_CAN_ModuleIns_e Ins, Middle_CAN_UserConfigType *UserConfig)
+void MID_CAN_SetCallback(MID_CAN_ModuleIns_e Ins, MID_CAN_UserConfigType *UserConfig)
 {
 	uint8_t CallbackID = 0U;
 
@@ -135,7 +135,7 @@ void Middle_FlexCAN_SetCallback(Middle_CAN_ModuleIns_e Ins, Middle_CAN_UserConfi
 	FlexCAN_CallbackRegister(Ins, UserConfig->HandlerFunc, CallbackID);
 }
 
-void Middle_FlexCAN_StandardReceiveMbInit(Middle_CAN_ModuleIns_e Ins, Middle_CAN_UserConfigType *UserConfig)
+void MID_CAN_StdRxMbInit(MID_CAN_ModuleIns_e Ins, MID_CAN_UserConfigType *UserConfig)
 {
 	FlexCAN_Driver_ReturnCode_e InitCode = FLEXCAN_DRIVER_RETURN_CODE_ERROR;
 
@@ -165,7 +165,7 @@ void Middle_FlexCAN_StandardReceiveMbInit(Middle_CAN_ModuleIns_e Ins, Middle_CAN
 	}
 }
 
-void Middle_FlexCAN_StandardTransmitMbInit(Middle_CAN_ModuleIns_e Ins, Middle_CAN_UserConfigType *UserConfig)
+void MID_CAN_StdTxMbInit(MID_CAN_ModuleIns_e Ins, MID_CAN_UserConfigType *UserConfig)
 {
 	FlexCAN_Driver_ReturnCode_e InitCode = FLEXCAN_DRIVER_RETURN_CODE_ERROR;
 
@@ -195,7 +195,7 @@ void Middle_FlexCAN_StandardTransmitMbInit(Middle_CAN_ModuleIns_e Ins, Middle_CA
 	}
 }
 
-void Middle_CAN_Transmit(Middle_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, uint8_t *TxBuffer)
+void MID_CAN_Transmit(MID_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, uint8_t *TxBuffer)
 {
 	CAN_MbStatus_e MbStatus = CAN_MB_INACTIVE;
 
@@ -211,7 +211,7 @@ void Middle_CAN_Transmit(Middle_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, 
 	}
 }
 
-void Middle_CAN_Receive(Middle_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, uint8_t *RxBuffer)
+void MID_CAN_Receive(MID_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, uint8_t *RxBuffer)
 {
 	CAN_MbStatus_e MbStatus = CAN_MB_INACTIVE;
 
@@ -227,7 +227,7 @@ void Middle_CAN_Receive(Middle_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, u
 	}
 }
 
-uint8_t Middle_FlexCAN_GetAckStatus(Middle_CAN_ModuleIns_e Ins)
+uint8_t MID_CAN_GetAckStatus(MID_CAN_ModuleIns_e Ins)
 {
 	uint8_t FlagValue = 0U;
 
@@ -240,7 +240,7 @@ uint8_t Middle_FlexCAN_GetAckStatus(Middle_CAN_ModuleIns_e Ins)
    -- Private functions
    ---------------------------------------------------------------------------- */
 
-static void FlexCAN_PORT_Init(Middle_CAN_ModuleIns_e Ins, FlexCAN_PinType PortPin)
+static void FlexCAN_PORT_Init(MID_CAN_ModuleIns_e Ins, FlexCAN_PinType PortPin)
 {
 	PORT_Config_type	   PORTConfig;
 	PORT_PinConfig_type PORTPINConfig;
@@ -256,7 +256,7 @@ static void FlexCAN_PORT_Init(Middle_CAN_ModuleIns_e Ins, FlexCAN_PinType PortPi
 	PORT_Driver_InitPin(&PORTPINConfig);
 }
 
-static void FlexCAN_NVIC_Control(Middle_CAN_ModuleIns_e Ins, FlexCAN_InterruptType IntControl)
+static void FlexCAN_NVIC_Control(MID_CAN_ModuleIns_e Ins, FlexCAN_InterruptType IntControl)
 {
 	/* Error Interrupt NVIC configuration */
 	if(IntControl.IntError == FlexCAN_INT_ERROR_ENABLE)
@@ -283,7 +283,7 @@ static void FlexCAN_NVIC_Control(Middle_CAN_ModuleIns_e Ins, FlexCAN_InterruptTy
 	}
 }
 
-static void FlexCAN_NVIC_MbControl(Middle_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, bool IsEnableInt){
+static void FlexCAN_NVIC_MbControl(MID_CAN_ModuleIns_e Ins, FlexCAN_MbIndex_e MbIndex, bool IsEnableInt){
 	IRQn_Type IRQNumber = NVIC_MBFLEXCAN[0];
 
 	if(Ins == MODULE_0_INS)

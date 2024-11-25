@@ -30,15 +30,6 @@ static void MIDD_clockInit(void) {
 
     // Enable clock for LPUART1 with appropriate source and divider settings
     PCC_PeriClockControl(PCC_LPUART1_INDEX, CLOCK_FIRCDIV2_CLK, CLOCK_DIV_1, ENABLE);
-
-    // Disable clock for LPUART1 if not needed temporarily
-   // PCC_PeriClockControl(PCC_LPUART1_INDEX, CLOCK_FIRCDIV2_CLK, CLOCK_DIV_1, DISABLE);
-
-    // Set FIRCDIV2 divider value directly (if this setting is part of the specific clock configuration)
-    //IP_SCG->FIRCDIV |= SCG_FIRCDIV_FIRCDIV2(1);
-
-    // Configure the LPUART1 peripheral clock source to FIRC (3u represents FIRC as the source)
-  //  PCC_PeriClockControl(PCC_LPUART1_INDEX, CLOCK_FIRCDIV2_CLK, CLOCK_DIV_1, ENABLE);
 }
 
 
@@ -73,12 +64,19 @@ void MID_UART_Init(void) {
   MIDD_uartInit();
 }
 
-void MID_UART_InstallCallBack(DRV_UART_CallBackFunctionType callBackType, DRV_CallBack_LPUART cbFunction)
+void MID_UART_InstallCallBack(MID_UART_CallBackFunctionType callBackType, DRV_CallBack_LPUART cbFunction)
 {
 	DRV_UART_InstallCallBack(callBackType, cbFunction);
 }
 
-DRV_UART_StatusType MID_UART_ReceiveDataInterrupt(const DRV_UART_InstanceType instance, const uint8_t *rxBuff, const uint16_t rxSize)
+void MID_UART_ReceiveDataInterrupt(const MID_UART_InstanceType instance, const uint8_t *rxBuff, const uint16_t rxSize)
 {
 	DRV_UART_ReceiveDataInterrupt(instance, rxBuff, rxSize);
 }
+
+void MID_UART_SendDataInterrupt(const MID_UART_InstanceType instance, uint8_t *data, uint16_t length)
+{
+	DRV_UART_SendDataInterrupt(instance, data, length);
+}
+
+

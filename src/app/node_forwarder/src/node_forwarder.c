@@ -44,6 +44,9 @@ uint8_t Request_CAN = 0x07;
 
 FWD_Connect_State_t FWD_Connect_State = FWD_NOT_OK;
 
+/******************************************************************************/
+/* Callback Prototypes */
+/******************************************************************************/
 void App_NewTempValue_Notification(void);
 void App_NewTempPing_Notification(void);
 void App_NewSpeedValue_Notification(void);
@@ -52,7 +55,7 @@ void App_NewSpeedPing_Notification(void);
 
 
 void (*CallBack_arr[RX_MB_COUNT])(void) = {App_NewTempValue_Notification, App_NewSpeedValue_Notification, App_NewTempPing_Notification, App_NewSpeedPing_Notification};
-Middle_FlexCAN_Handler_e Handler_Type_arr[RX_MB_COUNT] = {MIDDLE_HANDLER_MB_0_TYPE, MIDDLE_HANDLER_MB_1_TYPE, MIDDLE_HANDLER_MB_6_TYPE, MIDDLE_HANDLER_MB_7_TYPE};
+MID_CAN_Handler_e Handler_Type_arr[RX_MB_COUNT] = {MIDDLE_HANDLER_MB_0_TYPE, MIDDLE_HANDLER_MB_1_TYPE, MIDDLE_HANDLER_MB_6_TYPE, MIDDLE_HANDLER_MB_7_TYPE};
 FlexCAN_MbIndex_e ReceiveMB[RX_MB_COUNT] = {MB0, MB1, MB6, MB7};
 uint32_t ReceiveMB_Adr[RX_MB_COUNT] = {0x11, 0x22, 0x33, 0x44};
 
@@ -74,7 +77,7 @@ static void App_Process_UART_Request(uint8_t* Rcv_Msg)
 {
 	if(*Rcv_Msg  == STD_UART_MSG){
 		createString(&g_Data, UART_Respone_Msg, sizeof(UART_Respone_Msg));
-		DRV_UART_SendDataInterrupt(DRV_UART_instance_1,
+		MID_UART_SendDataInterrupt(MID_UART_instance_1,
 						(uint8_t*)UART_Respone_Msg, sizeof(UART_Respone_Msg));
 		*Rcv_Msg = DEFAULT_UART_MSG;
 	}
@@ -83,10 +86,10 @@ static void App_Process_UART_Request(uint8_t* Rcv_Msg)
 static void App_Process_CAN_NewValue(CAN_State_t *state)
 {
 	if(*state == CAN_SPEED_READY){
-		FlexCAN_ReadMailboxData(FlexCAN0_INS, MB1, &(g_Data.NODE_Speed_Data));
+		MID_CAN_Receive(MODULE_0_INS, MB1, &(g_Data.NODE_Speed_Data));
 		*state = CAN_SPEED_NOT_READY;
 	}else if(*state == CAN_TEMP_READY){
-		FlexCAN_ReadMailboxData(FlexCAN0_INS, MB0, &(g_Data.NODE_Temp_Data));
+		MID_CAN_Receive(MODULE_0_INS, MB0, &(g_Data.NODE_Temp_Data));
 		*state = CAN_TEMP_NOT_READY;
 	}
 }
@@ -142,7 +145,6 @@ void App_CheckPing_Notification(uint8_t channel)
 	}
 }
 
-
 void App_NewTempValue_Notification(void)
 {
 	g_CAN_TEMP_State = CAN_TEMP_READY;
@@ -151,7 +153,7 @@ void App_NewTempValue_Notification(void)
 void App_NewTempPing_Notification(void)
 {
 	if(Temp_Error_State == TEMP_STILL_ERROR){
-		Middle_CAN_Transmit(FlexCAN0_INS, MB5, &Request_CAN);
+		MID_CAN_Transmit(MODULE_0_INS, MB5, &Request_CAN);
 	}
 	Temp_Error_State = TEMP_NOT_ERROR;
 }
@@ -164,14 +166,14 @@ void App_NewSpeedValue_Notification(void)
 void App_NewSpeedPing_Notification(void)
 {
 	if(Speed_Error_State == SPEED_STILL_ERROR){
-		Middle_CAN_Transmit(FlexCAN0_INS, MB5, &Request_CAN);
+		MID_CAN_Transmit(MODULE_0_INS, MB5, &Request_CAN);
 	}
 	Speed_Error_State = SPEED_NOT_ERROR;
 }
 
 void App_Check_Request_UART(void)
 {
-	MID_UART_ReceiveDataInterrupt(DRV_UART_instance_1, &g_Msg, DLC_UART_MSG);
+	MID_UART_ReceiveDataInterrupt(MID_UART_instance_1, &g_Msg, DLC_UART_MSG);
 }
 
 /******************************************************************************/
@@ -190,26 +192,26 @@ void App_Forwarder_Run(void)
 
 		/*CAN Init*/
 
-	    Middle_FlexCAN_Init(FlexCAN0_INS);
+	    MID_CAN_Init(MODULE_0_INS);
 	    for(uint8_t MB_Index = 0; MB_Index < RX_MB_COUNT; MB_Index++){
-			Middle_CAN_UserConfigType UserCfgMB = {
+			MID_CAN_UserConfigType UserCfgMB = {
 					.HandlerFunc = CallBack_arr[MB_Index] ,
 					.HandlerType = Handler_Type_arr[MB_Index],
 					.MbID = ReceiveMB_Adr[MB_Index],
 					.MbIndex = ReceiveMB[MB_Index],
 					.MbInt = true
 			};
-	    	Middle_FlexCAN_StandardReceiveMbInit(FlexCAN0_INS, &UserCfgMB);
-			Middle_FlexCAN_SetCallback(FlexCAN0_INS, &UserCfgMB);
+	    	MID_CAN_StdRxMbInit(MODULE_0_INS, &UserCfgMB);
+			MID_CAN_SetCallback(MODULE_0_INS, &UserCfgMB);
 	    }
 
-		Middle_CAN_UserConfigType InitialMB = {
+		MID_CAN_UserConfigType InitialMB = {
 				.HandlerFunc = NULL,
 				.MbID = 0x55,
 				.MbIndex = MB5,
 				.MbInt = true
 		};
-		Middle_FlexCAN_StandardTransmitMbInit(FlexCAN0_INS, &InitialMB);
+		MID_CAN_StdTxMbInit(MODULE_0_INS, &InitialMB);
 
 	    /*LPIT Init*/
 
@@ -219,12 +221,12 @@ void App_Forwarder_Run(void)
 	    /*UART Init*/
 
 		MID_UART_Init();
-		MID_UART_InstallCallBack(DRV_UART_callBackReceiver, App_Check_Request_UART);
-		MID_UART_ReceiveDataInterrupt(DRV_UART_instance_1, &g_Msg, DLC_UART_MSG);
+		MID_UART_InstallCallBack(MID_UART_callBackReceiver, App_Check_Request_UART);
+		MID_UART_ReceiveDataInterrupt(MID_UART_instance_1, &g_Msg, DLC_UART_MSG);
 
 		/*CAN Send Request when Starting*/
 
-		Middle_CAN_Transmit(FlexCAN0_INS, MB5, &Request_CAN);
+		MID_CAN_Transmit(MODULE_0_INS, MB5, &Request_CAN);
     while(1){
     	App_Process_CAN_NewValue(&g_CAN_TEMP_State);
     	App_Process_CAN_NewValue(&g_CAN_SPEED_State);
@@ -232,3 +234,4 @@ void App_Forwarder_Run(void)
     	App_Process_LEDWarning();
     };
 }
+
