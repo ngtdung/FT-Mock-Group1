@@ -13,7 +13,7 @@
 /* Enumeration for temperature ping state */
 /**
  * @brief Enumeration for the temperature ping state.
- * 
+ *
  * Defines the possible states for the temperature ping readiness.
  */
 typedef enum {
@@ -24,7 +24,7 @@ typedef enum {
 /* Enumeration for temperature connection state */
 /**
  * @brief Enumeration for temperature connection state.
- * 
+ *
  * Defines the possible states of the temperature node connection.
  */
 typedef enum {

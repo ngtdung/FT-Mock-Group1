@@ -63,6 +63,9 @@ uint32_t ReceiveMB_Adr[RX_MB_COUNT] = {0x11, 0x22, 0x33, 0x44};
 /* Local APIs */
 /******************************************************************************/
 
+/**
+ * @brief Creates a formatted string based on temperature and speed data.
+ */
 static void createString(const Data_t* data, uint8_t* output, size_t outputSize) {
 	uint8_t dataTemp = data->NODE_Temp_Data;
 	uint8_t dataSpeed = data->NODE_Speed_Data;
@@ -72,7 +75,9 @@ static void createString(const Data_t* data, uint8_t* output, size_t outputSize)
 }
 
 
-
+/**
+ * @brief Processes a received UART request and sends a response if needed.
+ */
 static void App_Process_UART_Request(uint8_t* Rcv_Msg)
 {
 	if(*Rcv_Msg  == STD_UART_MSG){
@@ -83,6 +88,9 @@ static void App_Process_UART_Request(uint8_t* Rcv_Msg)
 	}
 }
 
+/**
+ * @brief Processes new temperature or speed values received via CAN.
+ */
 static void App_Process_CAN_NewValue(CAN_State_t *state)
 {
 	if(*state == CAN_SPEED_READY){
@@ -94,6 +102,9 @@ static void App_Process_CAN_NewValue(CAN_State_t *state)
 	}
 }
 
+/**
+ * @brief Updates LED states based on temperature and speed thresholds.
+ */
 static void App_Process_LEDWarning(void)
 {
 	if (g_Data.NODE_Temp_Data > THRESHOLD_TEMP_HIGH && g_Data.NODE_Temp_Data != ERROR_VALUE)
@@ -126,6 +137,9 @@ static void App_Process_LEDWarning(void)
 /* CallBack APIs */
 /******************************************************************************/
 
+/**
+ * @brief Periodically checks for temperature and speed errors via ping.
+ */
 void App_CheckPing_Notification(uint8_t channel)
 {
 	if(Speed_Error_State == SPEED_NOT_ERROR){
@@ -145,11 +159,17 @@ void App_CheckPing_Notification(uint8_t channel)
 	}
 }
 
+/**
+ * @brief Sets the CAN state to ready when new temperature data is available.
+ */
 void App_NewTempValue_Notification(void)
 {
 	g_CAN_TEMP_State = CAN_TEMP_READY;
 }
 
+/**
+ * @brief Resets temperature error state and sends a CAN request if needed.
+ */
 void App_NewTempPing_Notification(void)
 {
 	if(Temp_Error_State == TEMP_STILL_ERROR){
@@ -158,11 +178,17 @@ void App_NewTempPing_Notification(void)
 	Temp_Error_State = TEMP_NOT_ERROR;
 }
 
+/**
+ * @brief Sets the CAN state to ready when new speed data is available.
+ */
 void App_NewSpeedValue_Notification(void)
 {
 	g_CAN_SPEED_State = CAN_SPEED_READY;
 }
 
+/**
+ * @brief Resets speed error state and sends a CAN request if needed.
+ */
 void App_NewSpeedPing_Notification(void)
 {
 	if(Speed_Error_State == SPEED_STILL_ERROR){
@@ -171,6 +197,9 @@ void App_NewSpeedPing_Notification(void)
 	Speed_Error_State = SPEED_NOT_ERROR;
 }
 
+/**
+ * @brief Checks for incoming UART requests and triggers processing.
+ */
 void App_Check_Request_UART(void)
 {
 	MID_UART_ReceiveDataInterrupt(MID_UART_instance_1, &g_Msg, DLC_UART_MSG);
@@ -180,6 +209,9 @@ void App_Check_Request_UART(void)
 /* Public APIs */
 /******************************************************************************/
 
+/**
+ * @brief Main function for initializing peripherals and running the application logic.
+ */
 void App_Forwarder_Run(void)
 {
 
