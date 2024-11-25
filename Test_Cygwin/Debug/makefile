@@ -26,7 +26,7 @@ RM := rm -rf
 -include driver/port/src/subdir.mk
 -include driver/lpit/src/subdir.mk
 -include driver/gpio/src/subdir.mk
--include driver/can_driver/src/subdir.mk
+-include driver/can/src/subdir.mk
 -include driver/adc/src/subdir.mk
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(strip $(C++M_DEPS)),)

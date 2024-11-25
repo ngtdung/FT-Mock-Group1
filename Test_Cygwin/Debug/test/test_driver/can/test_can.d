@@ -22,7 +22,7 @@ test/test_driver/can/test_can.o: ../test/test_driver/can/test_can.cpp \
  D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest_prod.h \
  D:\eclipse-workspace\Test_Cygwin\stub\driver\can_stub\include/can_stub.h \
  D:\eclipse-workspace\Test_Cygwin\stub\board/generic.h \
- D:\eclipse-workspace\Test_Cygwin\driver\can_driver\include/FlexCAN.h \
+ ../test/test_driver/can/../../../driver/can/include/FlexCAN.h \
  D:\eclipse-workspace\Test_Cygwin\stub\board/S32K144.h \
  D:\eclipse-workspace\Test_Cygwin\stub\driver\lpit_stub\include/lpit_stub.h \
  D:\eclipse-workspace\Test_Cygwin\stub\driver\adc_stub\include/adc_stub.h \
@@ -53,7 +53,7 @@ D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest_pred_impl.h:
 D:\eclipse-workspace\Test_Cygwin\libgtest\include/gtest/gtest_prod.h:
 D:\eclipse-workspace\Test_Cygwin\stub\driver\can_stub\include/can_stub.h:
 D:\eclipse-workspace\Test_Cygwin\stub\board/generic.h:
-D:\eclipse-workspace\Test_Cygwin\driver\can_driver\include/FlexCAN.h:
+../test/test_driver/can/../../../driver/can/include/FlexCAN.h:
 D:\eclipse-workspace\Test_Cygwin\stub\board/S32K144.h:
 D:\eclipse-workspace\Test_Cygwin\stub\driver\lpit_stub\include/lpit_stub.h:
 D:\eclipse-workspace\Test_Cygwin\stub\driver\adc_stub\include/adc_stub.h:

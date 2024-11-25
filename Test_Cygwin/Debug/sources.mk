@@ -31,7 +31,7 @@ OBJS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 driver/adc/src \
-driver/can_driver/src \
+driver/can/src \
 driver/gpio/src \
 driver/lpit/src \
 driver/port/src \

@@ -2,7 +2,8 @@
 #include<iostream>
 #include<pthread.h>
 #include"can_stub.h"
-#include"FlexCAN.h"
+
+#include "../../../driver/can/include/FlexCAN.h"
 
 #define INVALID_INSTANCE (3U)
 #define INVALID_MB 		(33U)
@@ -244,7 +245,7 @@ TEST_F(CAN_TEST,TC002){
 
 /**
  * @test_id
- * @brief			Verify that FlexCAN initialization fails when an instance is already initialized and ensure the state remains unchanged.
+ * @brief			Verify that FlexCAN initialization fails when an instance is already initialized.
  * @pre				All FlexCAN instances must be uninitialized before the test begins.
  * @test_type		Functional
  * @test_procedure	Test procedure steps:
@@ -274,7 +275,7 @@ TEST_F(CAN_TEST,TC003){
 
 /**
  * @test_id
- * @brief			Verify that FlexCAN initialization fails when provided with an invalid instance or a NULL configuration pointer, and ensure the state remains unchanged.
+ * @brief			Verify that FlexCAN initialization fails when provided with invalid parameters.
  * @pre				All FlexCAN instances must be uninitialized before the test begins.
  * @test_type		Functional
  * @test_procedure	Test procedure steps:
@@ -305,7 +306,7 @@ TEST_F(CAN_TEST,TC004){
 
 /**
  * @test_id
- * @brief			Verify that FlexCAN deinitialization correctly resets the module state and configuration after successful initialization.
+ * @brief			Verify that FlexCAN deinitialization after successful initialization.
  * @pre				All FlexCAN instances must be uninitialized before the test begins.
  * @test_type		Functional
  * @test_procedure	Test procedure steps:
@@ -342,7 +343,7 @@ TEST_F(CAN_TEST,TC005){
 
 /**
  * @test_id
- * @brief			Verify that FlexCAN deinitialization fails when the module is not initialized and ensures the state remains unchanged.
+ * @brief			Verify that FlexCAN deinitialization fails when the module is not initialized.
  * @pre				All FlexCAN instances must be uninitialized before the test begins.
  * @test_type		Functional
  * @test_procedure	Test procedure steps:
@@ -366,7 +367,7 @@ TEST_F(CAN_TEST,TC006){
 
 /**
  * @test_id
- * @brief			Verify that FlexCAN deinitialization fails when called with an invalid instance index and ensures the state remains unchanged.
+ * @brief			Verify that FlexCAN deinitialization fails when called with invalid parameters.
  * @pre				All FlexCAN instances must be uninitialized before the test begins.
  * @test_type		Functional
  * @test_procedure	Test procedure steps:
@@ -432,7 +433,7 @@ TEST_F(CAN_TEST,TC009){
 
 /**
  * @test_id
- * @brief			Verify initialization of multiple mailboxes and check interrupt enablement for each.
+ * @brief			Verify mailbox initialization and check interrupt enable for each.
  * @pre				N/A
  * @test_type		Functional
  * @test_procedure	Test procedure steps:
@@ -453,7 +454,7 @@ TEST_F(CAN_TEST,TC010){
 
 /**
  * @test_id
- * @brief			Verify error handling when invalid mailbox indices or NULL configurations are passed.
+ * @brief			Verify mailbox initialization when invalid parameters are passed.
  * @pre				N/A
  * @test_type		Functional
  * @test_procedure	Test procedure steps:
@@ -484,7 +485,7 @@ TEST_F(CAN_TEST,TC011){
 
 /**
  * @test_id
- * @brief			Verify error handling during transmission with invalid mailbox indices or NULL data.
+ * @brief			Verify transmission with invalid parameters.
  * @pre				N/A
  * @test_type		Functional
  * @test_procedure	Test procedure steps:
@@ -514,7 +515,7 @@ TEST_F(CAN_TEST,TC012){
 
 /**
  * @test_id
- * @brief			Verify data transmission and correct placement in the mailbox after transmission.
+ * @brief			Verify transmission data.
  * @pre				N/A
  * @test_type		Functional
  * @test_procedure	Test procedure steps:
@@ -564,7 +565,7 @@ TEST_F(CAN_TEST,TC013){
 
 /**
  * @test_id
- * @brief			Verify data transmission and correct data retrieval from the mailbox.
+ * @brief			Verify data read from the mailbox.
  * @pre				N/A
  * @test_type		Functional
  * @test_procedure	Test procedure steps:
@@ -621,7 +622,7 @@ TEST_F(CAN_TEST,TC014){
 
 /**
  * @test_id
- * @brief			Verify error handling when reading from an invalid or NULL mailbox.
+ * @brief			Verify data read with invalid parameters.
  * @pre				N/A
  * @test_type		Functional
  * @test_procedure	Test procedure steps:

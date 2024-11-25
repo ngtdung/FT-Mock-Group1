@@ -2,7 +2,8 @@
 #include<iostream>
 #include<pthread.h>
 #include"can_stub.h"
-#include"FlexCAN.h"
+
+#include "../../../driver/can/include/FlexCAN.h"
 
 #define INVALID_INSTANCE (3U)
 #define INVALID_MB 		(33U)

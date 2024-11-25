@@ -158,6 +158,8 @@ LpitStatusType DRV_LPIT_Deinit(LpitInsType Lpit_ins);
 
 void LPIT0_Ch0_IRQHandler(void);
 void LPIT0_Ch1_IRQHandler(void);
+void LPIT0_Ch2_IRQHandler(void);
+void LPIT0_Ch3_IRQHandler(void);
 
 #endif /* _DRV_LPIT_H_ */
 
